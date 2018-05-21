@@ -1,0 +1,90 @@
+const { expect } = require('code');
+// eslint-disable-next-line
+const lab = exports.lab = require('lab').script();
+const url = require('url');
+
+const server = require('../../../');
+const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { users } = require('../../fixtures');
+
+lab.experiment('GET /users/{user_id}', () => {
+  let user;
+  let user2;
+  let Authorization;
+
+  lab.before(async () => {
+    const data = await fixtures.create({ users });
+    user = data.users[0];
+    user2 = data.users[1];
+    const authRes = await getAuthToken(data.users[0]);
+    Authorization = authRes.token;
+  });
+
+  lab.after(() => {
+    return destroyRecords({ users });
+  });
+
+  lab.test('should return a user by id', async () => {
+    const options = {
+      url: url.format(`/users/${user.id}`),
+      method: 'GET',
+      headers: { Authorization },
+    };
+
+
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(200);
+    expect(res.result).to.be.an.object();
+    expect(res.result.email).to.equal(users[0].email);
+    expect(res.result).to.not.include('password');
+  });
+
+  lab.test('should error if requesting a user not authorized to view', async () => {
+    const options = {
+      url: url.format(`/users/${user2.id}`),
+      method: 'GET',
+      headers: { Authorization },
+    };
+
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(403);
+    expect(res.result).to.be.an.object();
+    expect(res.result).to.not.include('password');
+  });
+
+  lab.test.skip('should error if user is not found', async () => {
+    // TODO needs to be an admin
+    const options = {
+      url: url.format('/users/bada5599-3400-449a-b13c-61ad7ffd1d77'),
+      method: 'GET',
+      headers: { Authorization },
+    };
+
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(404);
+    expect(res.result).to.be.an.object();
+  });
+
+
+  lab.test('should error with invalid user_id', async () => {
+    const options = {
+      url: url.format('/users/notgood'),
+      method: 'GET',
+      headers: { Authorization },
+    };
+
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(400);
+    expect(res.result).to.be.an.object();
+  });
+  lab.test('should error if no auth token is found', async () => {
+    const options = {
+      url: url.format(`/users/${user.id}`),
+      method: 'GET',
+    };
+
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(401);
+    expect(res.result).to.be.an.object();
+  });
+});

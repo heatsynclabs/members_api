@@ -1,0 +1,10 @@
+node_modules/
+build/
+coverage/
+.DS_Store
+logs
+*.log
+npm-debug.log*
+migrations/.migrations
+migrations/migrations*
+.vscode/

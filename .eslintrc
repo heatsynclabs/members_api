@@ -1,0 +1,19 @@
+{
+  // enable airbnb eslint from https://www.npmjs.com/package/eslint-config-airbnb
+  "extends": "airbnb",
+    "rules": {
+      consistent-return: [0, { "treatUndefinedAsUnspecified": true }],
+      no-extraneous-dependencies: "off",
+      camelcase: "off",
+      comma-dangle: "off",
+      prefer-template: "off",
+      "arrow-body-style": "off",
+      "max-len": "off",
+      "prefer-rest-params": "off",
+      "prefer-destructuring": ["error", {
+        "AssignmentExpression": {
+          "array": false,
+        }
+      }]
+    }
+}

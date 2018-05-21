@@ -1,0 +1,14 @@
+DROP TABLE users CASCADE;
+DROP TABLE payment_methods CASCADE;
+DROP TABLE time_token CASCADE;
+DROP TABLE groups CASCADE;
+DROP TABLE memberships CASCADE;
+DROP TABLE cards CASCADE;
+DROP TABLE contracts CASCADE;
+DROP TABLE user_certifications CASCADE;
+DROP TABLE payments CASCADE;
+DROP TABLE certifications CASCADE;
+DROP TYPE token_type CASCADE;
+DROP EXTENSION "citext";
+DROP EXTENSION "uuid-ossp";
+DROP FUNCTION updated_at() CASCADE;
