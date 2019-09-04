@@ -8,3 +8,4 @@ npm-debug.log*
 migrations/.migrations
 migrations/migrations*
 .vscode/
+keys.sh

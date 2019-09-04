@@ -13,5 +13,5 @@ module.exports = [
       description: 'list stats',
       tags: ['api', 'stats'], // ADD THIS TAG
     },
-  },
+  }
 ];

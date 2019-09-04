@@ -84,10 +84,10 @@ module.exports = {
     },
     tags: [{
       name: 'api',
-      description: 'Iced API',
+      description: 'HSL API',
       externalDocs: {
         description: 'find out more',
-        url: 'https://iceddev.com',
+        url: 'https://heatsynclabs.org',
       },
     }],
     pathPrefixSize: 3,
@@ -96,4 +96,5 @@ module.exports = {
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
   },
   server: {},
+  version: Pack.version
 };
