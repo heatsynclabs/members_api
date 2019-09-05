@@ -1,4 +1,5 @@
 const env = process.env.NODE_ENV || 'development';
+const port = process.env.NODE_PORT || port;
 const Pack = require('./package');
 const knexFile = require('./knexfile');
 
@@ -10,7 +11,7 @@ const jwt = {
 const connectionOptions = {
   test: {
     host: '0.0.0.0',
-    port: 3004,
+    port: port,
     routes: {
       cors: {
         credentials: true,
@@ -21,7 +22,7 @@ const connectionOptions = {
 
   development: {
     host: '0.0.0.0',
-    port: 3004,
+    port: port,
     routes: {
       cors: {
         credentials: true,
@@ -31,7 +32,7 @@ const connectionOptions = {
   },
   production: {
     host: '0.0.0.0',
-    port: 3004,
+    port: port,
     routes: {
       cors: {
         credentials: true,
