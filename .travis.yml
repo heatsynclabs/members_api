@@ -4,19 +4,19 @@ services:
   - docker
   - postgres
 
-env:
-  - NODE_PORT=3000
-  - NODE_ENV=development
-  - SENDGRID_API_KEY="some big ass sendgrid key"
-  - DATABASE_URL="postgres://postgres@host.docker.internal:5432/hsl_test"
-  - JWT_KEY="some random key"
-
 before_script:
   - psql -c 'create database hsl_test;' -U postgres
 
 before_install:
 - docker build -t members_api:latest .
-- docker run members_api:latest /bin/sh -c "npm install && npm run test"
+- >-
+  docker run
+  -e NODE_PORT=3000
+  -e NODE_ENV=development
+  -e SENDGRID_API_KEY="some big ass sendgrid key"
+  -e DATABASE_URL="postgres://postgres@host.docker.internal:5432/hsl_test"
+  -e JWT_KEY="some random key"
+  members_api:latest /bin/sh -c "npm install && npm run test"
 
 script:
 - npm run test
