@@ -10,4 +10,4 @@ migrations/migrations*
 .vscode/
 keys.sh
 package-lock.json
-
+docker-compose.yml #copy the dist file to use
