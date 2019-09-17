@@ -14,9 +14,11 @@ COPY package.json /home/app/
 
 #RUN npm ci
 
+# Temporary copy that will likely be overwritten by a volume
 COPY . /home/app
 
 #RUN npm run build
-RUN npm install
+#RUN npm install
 
-CMD npm run start
+# TODO: possibly use npm run develop for dev instead of start
+CMD npm install && npm run start
