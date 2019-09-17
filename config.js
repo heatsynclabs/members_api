@@ -1,5 +1,5 @@
 const env = process.env.NODE_ENV || 'development';
-const port = process.env.NODE_PORT || port;
+const port = process.env.NODE_PORT || 3004;
 const Pack = require('./package');
 const knexFile = require('./knexfile');
 
