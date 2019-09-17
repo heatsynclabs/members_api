@@ -2,6 +2,17 @@ language: node_js
 
 services:
   - docker
+  - postgres
+
+env:
+  - NODE_PORT=3000
+  - NODE_ENV=development
+  - SENDGRID_API_KEY="some big ass sendgrid key"
+  - DATABASE_URL="postgres://postgres@host.docker.internal:5432/hsl_test"
+  - JWT_KEY="some random key"
+
+before_script:
+  - psql -c 'create database hsl_test;' -U postgres
 
 before_install:
 - docker build -t members_api:latest .
