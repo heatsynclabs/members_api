@@ -1,0 +1,11 @@
+language: node_js
+
+services:
+  - docker
+
+before_install:
+- docker build -t members_api:latest .
+- docker run members_api:latest /bin/sh -c "npm run test"
+
+script:
+- npm run test
