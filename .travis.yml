@@ -14,8 +14,9 @@ before_install:
   -e NODE_PORT=3000
   -e NODE_ENV=development
   -e SENDGRID_API_KEY="some big ass sendgrid key"
-  -e DATABASE_URL="postgres://postgres@host.docker.internal:5432/hsl_test"
+  -e DATABASE_URL="postgres://postgres@`hostname`:5432/hsl_test"
   -e JWT_KEY="some random key"
+  --net host
   members_api:latest /bin/sh -c "npm install && npm run test"
 
 script:
