@@ -1,9 +1,9 @@
-language: node_js
+language: generic
 
 services:
   - docker
 
-before_script:
+install:
   - cp docker-compose.dist.yml docker-compose.yml && sed -i "s^/home/YOUR_USER/YOUR_PATH/THIS_FOLDER^`pwd`^g" docker-compose.yml
   - docker-compose up
 
