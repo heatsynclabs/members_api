@@ -8,4 +8,4 @@ install:
   - docker-compose up -d
 
 script:
-  - docker exec -it members_api /bin/sh -c 'npm run up && npm run test'
+  - docker exec -it members_api /bin/sh -c 'npm install && npm run up && npm run test'
