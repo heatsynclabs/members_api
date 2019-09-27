@@ -133,7 +133,10 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 -- seed data
-INSERT INTO users (password,email,name,is_validated) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true);
+INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);
+INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'gobie@example.com','Gobie McDaniels',true,5);
+INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'jimbo@example.com','Jimbo Fargo',false,1);
+INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'hardy@example.com','Hardy Bridle',true,10);
 
 INSERT INTO payment_methods (id) VALUES ('CASH');
 INSERT INTO payment_methods (id) VALUES ('PAYPAL');
