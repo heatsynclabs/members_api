@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.com/heatsynclabs/api.svg?token=SBSA1SGpDCdD2HrQ2zPH&branch=master)](https://travis-ci.com/heatsynclabs/api)
 
 ## Normal Docker Dev Usage
 
