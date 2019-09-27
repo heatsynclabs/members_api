@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.com/heatsynclabs/api.svg?token=SBSA1SGpDCdD2HrQ2zPH&branch=master)](https://travis-ci.com/heatsynclabs/api)
 
+# Members DB API
+
 ## Normal Docker Dev Usage
 
 **Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
@@ -25,9 +27,11 @@ To access the container's shell prompt:
 To create basic db tables from within container shell:
 `npm run up`
 
-To view a container's website from the docker host machine: `http://localhost:3005` or `http://localhost:3004`
+To view this container's website from the docker host machine: `http://localhost:3004`
 
 To access the database directly, use your docker host's `psql` or `pgadmin` client on `localhost:5432` (assuming you've forwarded the port in docker-compose.yml)
+
+Note that this app is just the API, so again if you want a working app you probably want to check out the `members_app` repo.
 
 ### Debugging Docker Dev Usage
 
