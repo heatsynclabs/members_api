@@ -5,6 +5,7 @@ services:
 
 install:
   - cp docker-compose.dist.yml docker-compose.yml && sed -i "s^/home/YOUR_USER/YOUR_PATH/THIS_FOLDER^`pwd`^g" docker-compose.yml
+  - sed -i "s^5432:5432^55432:5432^g" docker-compose.yml
   - docker-compose up -d
 
 script:
