@@ -28,7 +28,9 @@ lab.experiment('POST /user', () => {
     };
 
     const res = await server.inject(options);
-    tokens.push(res.result.id);
+    if(res.result && res.result.id) { // sometimes we don't get a result (i.e. 500)
+      tokens.push(res.result.id);
+    }
     expect(res.statusCode).to.equal(200);
     expect(res.result).to.be.an.object();
     expect(res.result).to.include('id');

@@ -95,6 +95,7 @@ module.exports = {
   },
   sendgrid: {
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+    disable_sending: (env != "production")
   },
   server: {},
   version: Pack.version

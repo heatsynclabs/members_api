@@ -1,5 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "citext";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE OR REPLACE FUNCTION updated_at()
 RETURNS TRIGGER AS $$
@@ -132,6 +133,8 @@ CREATE TABLE IF NOT EXISTS payments (
 );
 
 -- seed data
+INSERT INTO users (password,email,name,is_validated) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true);
+
 INSERT INTO payment_methods (id) VALUES ('CASH');
 INSERT INTO payment_methods (id) VALUES ('PAYPAL');
 INSERT INTO groups (id, description) VALUES ('ADMIN', 'Admin users');

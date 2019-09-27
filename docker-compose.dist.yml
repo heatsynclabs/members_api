@@ -1,18 +1,18 @@
 version: "3"
 services:
-  api:
+  members_api:
     container_name: members_api
     build: .
     depends_on:
-      - postgres
+      - members_postgres
     ports:
-      - "3000:3000"
+      - "3004:3004"
       - "9229:9229"
     environment:
-      NODE_PORT: 3000
+      NODE_PORT: 3004
       NODE_ENV: "development"
       SENDGRID_API_KEY: "some big ass sendgrid key"
-      DATABASE_URL: "postgres://postgres:postgres@postgres:5432/hsl_dev"
+      DATABASE_URL: "postgres://postgres:postgres@members_postgres:5432/hsl_dev"
       JWT_KEY: "some random key"
     volumes:
       - /home/YOUR_USER/YOUR_PATH/THIS_FOLDER:/home/app

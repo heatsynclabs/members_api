@@ -20,5 +20,5 @@ COPY . /home/app
 #RUN npm run build
 #RUN npm install
 
-# TODO: possibly use npm run develop for dev instead of start
-CMD npm install && npm run start
+# TODO: use npm run develop for dev and npm run start for prod
+CMD npm install && npm run up && npm run develop
