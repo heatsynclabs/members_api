@@ -17,9 +17,11 @@ services:
     volumes:
       - /home/YOUR_USER/YOUR_PATH/THIS_FOLDER:/home/app
 
-  postgres:
+  members_postgres:
     container_name: members_postgres
     image: postgres:11.2-alpine
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: hsl_dev
