@@ -132,6 +132,22 @@ CREATE TABLE IF NOT EXISTS payments (
   updated_at TIMESTAMPTZ
 );
 
+CREATE TABLE IF NOT EXISTS events (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT,
+  description TEXT,
+  start_date DATE,
+  end_date DATE,
+  frequency TEXT,
+  location TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ
+);
+
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON events FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
+
 -- seed data
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'gobie@example.com','Gobie McDaniels',true,5);
@@ -153,3 +169,5 @@ INSERT INTO certifications (id, name, description, created_at, updated_at) VALUE
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(9, 'Table Saw', 'table saw', '2014-02-07 21:30:18.813289', '2014-02-23 06:08:39.593008');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(10, 'Plasma Cutter', 'Hobart 500534R 250ci Reconditioned A-Stock AirForce', '2014-04-11 02:08:58.334201', '2014-04-11 02:08:58.334201');
 ALTER SEQUENCE certifications_id_seq RESTART WITH 11;
+
+INSERT INTO events (name, description, start_date, end_date, frequency, location) VALUES('Laser Class', 'Join this class!\r\nIt''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs');
