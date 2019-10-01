@@ -3,6 +3,7 @@ const { omit } = require('lodash');
 
 const {
   browse,
+  byIdCached
 } = require('../lib/events');
 const { resetRequest, resetPassword } = require('../lib/reset');
 
@@ -29,10 +30,10 @@ module.exports = [
     path: '/events',
     handler: req => browse(req.query),
     config: {
-      // auth: {
-      //   strategy: 'jwt',
-      //   scope: ['USER'],
-      // },
+      auth: {
+        strategy: 'jwt',
+        scope: ['USER'],
+      },
       description: 'Query for events',
       notes: 'Query for events',
       tags: ['api', 'events'],
@@ -41,25 +42,25 @@ module.exports = [
       },
     },
   },
-  // {
-  //   method: 'GET',
-  //   path: '/events/{event_id}',
-  //   config: {
-  //     auth: {
-  //       strategy: 'jwt',
-  //       scope: ['USER'],
-  //     },
-  //     handler: req => byIdCached(req.params.event_id),
-  //     description: 'Gets a event',
-  //     notes: 'Returns back the specified event object',
-  //     tags: ['api'], // ADD THIS TAG
-  //     validate: {
-  //       params: {
-  //         event_id: Joi.string().uuid().required(),
-  //       },
-  //     },
-  //   },
-  // },
+  {
+    method: 'GET',
+    path: '/events/{event_id}',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: ['USER'],
+      },
+      handler: req => byIdCached(req.params.event_id),
+      description: 'Gets a event',
+      notes: 'Returns back the specified event object',
+      tags: ['api'], // ADD THIS TAG
+      validate: {
+        params: {
+          event_id: Joi.string().uuid().required(),
+        },
+      },
+    },
+  },
   // {
   //   method: 'DELETE',
   //   path: '/events/{event_id}',

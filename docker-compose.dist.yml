@@ -3,6 +3,7 @@ services:
   members_api:
     container_name: members_api
     build: .
+    image: heatsynclabs/members_api:latest
     depends_on:
       - members_postgres
     ports:
