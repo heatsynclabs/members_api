@@ -7,13 +7,23 @@ const { omit } = require('lodash');
 
 const bread = require('../../../lib/bread');
 const server = require('../../../');
-const { destroyRecords, destroyTokens } = require('../../fixture-client');
+const { destroyRecords, destroyTokens, fixtures } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 const { databaseError } = require('../../../lib/errors');
 
 lab.experiment('POST /user', () => {
   // eslint-disable-next-line
   let tokens = [];
+
+  lab.before((done) => {
+    fixtures.create({ users })
+      .then((res) => {
+        console.log("res ", res);
+        done();
+      })
+      .catch(done);
+  });
+
   lab.after(() => {
     return destroyRecords({ users })
       .then(destroyTokens(tokens));

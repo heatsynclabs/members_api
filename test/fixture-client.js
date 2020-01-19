@@ -9,7 +9,7 @@ const knex = require('../knex');
 
 const fixturesConfig = {
   client: 'pg',
-  connection: config.knex.connection,
+  connection: config.knex.test,
 };
 
 const fixtures = new Fixtures(fixturesConfig);
