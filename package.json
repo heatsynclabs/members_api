@@ -7,7 +7,7 @@
     "start": "node index.js",
     "inspect": "nodemon --inspect index.js",
     "develop": "DEBUG=error*,general* nodemon index",
-    "test": "NODE_ENV=test lab -v --leaks",
+    "test": "npm run down && npm run up && NODE_ENV=test lab -v --leaks",
     "lint": "eslint . --ext .js",
     "coverage": "NODE_ENV=test nyc cover lab -v --leaks",
     "up": "knex migrate:latest",

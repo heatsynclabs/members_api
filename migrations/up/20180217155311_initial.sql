@@ -170,4 +170,4 @@ INSERT INTO certifications (id, name, description, created_at, updated_at) VALUE
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(10, 'Plasma Cutter', 'Hobart 500534R 250ci Reconditioned A-Stock AirForce', '2014-04-11 02:08:58.334201', '2014-04-11 02:08:58.334201');
 ALTER SEQUENCE certifications_id_seq RESTART WITH 11;
 
-INSERT INTO events (name, description, start_date, end_date, frequency, location) VALUES('Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs');
+INSERT INTO events (id,name, description, start_date, end_date, frequency, location) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a6a','Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs');
