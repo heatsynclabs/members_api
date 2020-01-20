@@ -22,11 +22,11 @@ lab.experiment('GET /events/', () => {
   });
 
   lab.after(() => {
-    return destroyRecords({ events });
+    return destroyRecords({ users, events });
   });
 
   lab.test('should retrieve event information when logged in', (done) => {
-      console.log('boo');
+    console.log('boo');
     const options = {
       url: url.format({
         pathname: '/events',
@@ -35,9 +35,9 @@ lab.experiment('GET /events/', () => {
       headers: { Authorization },
     };
 
-      console.log('hi');
+    console.log('hi');
     server.inject(options, (res) => {
-      console.log('res',res);
+      console.log('res', res);
       expect(res.statusCode).to.equal(200);
       expect(res.result).to.be.an.array();
       expect(res.result[0].name).to.equal('foo');

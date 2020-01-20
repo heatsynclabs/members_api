@@ -15,15 +15,6 @@ lab.experiment('POST /user', () => {
   // eslint-disable-next-line
   let tokens = [];
 
-  lab.before((done) => {
-    fixtures.create({ users })
-      .then((res) => {
-        console.log("res ", res);
-        done();
-      })
-      .catch(done);
-  });
-
   lab.after(() => {
     return destroyRecords({ users })
       .then(destroyTokens(tokens));

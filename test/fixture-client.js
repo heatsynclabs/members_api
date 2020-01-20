@@ -4,12 +4,12 @@ const promise = require('bluebird');
 const debug = require('debug')('errors');
 const url = require('url');
 const server = require('../');
-const config = require('../config');
+const { connection } = require('../knexfile');
 const knex = require('../knex');
 
 const fixturesConfig = {
   client: 'pg',
-  connection: config.knex.test,
+  connection,
 };
 
 const fixtures = new Fixtures(fixturesConfig);
