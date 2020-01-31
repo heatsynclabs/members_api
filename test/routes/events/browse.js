@@ -2,13 +2,10 @@ const { expect } = require('code');
 // eslint-disable-next-line
 const lab = exports.lab = require('lab').script();
 const url = require('url');
-const sinon = require('sinon');
 
-const bread = require('../../../lib/bread');
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
-const { databaseError } = require('../../../lib/errors');
 
 lab.experiment('GET /events/', () => {
   let event;
@@ -100,24 +97,4 @@ lab.experiment('GET /events/', () => {
     });
   });
 
-  lab.test('should error if database is not connected', (done) => {
-    const stub = sinon.stub(bread, 'browse').callsFake(() => Promise.reject(databaseError()));
-
-    const options = {
-      url: url.format({
-        pathname: '/events/',
-        query: {
-          name: events[0].name,
-        },
-      }),
-      method: 'GET',
-      headers: { Authorization },
-    };
-
-    server.inject(options, (res) => {
-      expect(res.statusCode).to.equal(500);
-      stub.restore();
-      done();
-    });
-  });
 });
