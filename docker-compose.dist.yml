@@ -14,8 +14,6 @@ services:
       SENDGRID_API_KEY: "some big ass sendgrid key"
       DATABASE_URL: "postgres://postgres:postgres@members_postgres:5432/hsl_dev"
       JWT_KEY: "some random key"
-    volumes:
-      - .:/home/app
 
   members_postgres:
     container_name: members_postgres

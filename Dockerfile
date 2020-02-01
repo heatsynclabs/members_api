@@ -18,6 +18,6 @@ COPY package.json /home/app/
 COPY . /home/app
 
 #RUN npm run build
-RUN npm install
+RUN npm install -g
 
-CMD /home/app/docker/run.sh
+CMD /home/app/docker-run.sh
