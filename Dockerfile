@@ -20,4 +20,4 @@ COPY . /home/app
 #RUN npm run build
 RUN npm install
 
-CMD /home/app/docker-run.sh
+CMD /home/app/docker/run.sh
