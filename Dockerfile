@@ -5,7 +5,7 @@ RUN apk update
 
 RUN apk add \
   build-base \
-  python=2.7.16-r1
+  python=2.7
 
 WORKDIR /home/app
 
