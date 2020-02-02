@@ -5,7 +5,7 @@ RUN apk update
 
 RUN apk add \
   build-base \
-  python=2.7.16-r1
+  python2
 
 WORKDIR /home/app
 
@@ -18,7 +18,6 @@ COPY package.json /home/app/
 COPY . /home/app
 
 #RUN npm run build
-#RUN npm install
+RUN npm install
 
-# TODO: use npm run develop for dev and npm run start for prod
-CMD npm install && npm run up && npm run develop
+CMD /home/app/docker-run.sh

@@ -4,6 +4,7 @@ const auth = require('./auth');
 const certs = require('./certs');
 const cards = require('./cards');
 const stats = require('./stats');
+const events = require('./events');
 
 
 // Routes - Exports a default for routes to be used in index.js
@@ -13,5 +14,6 @@ module.exports = [].concat(
   users,
   certs,
   cards,
-  stats
+  stats,
+  events
 );

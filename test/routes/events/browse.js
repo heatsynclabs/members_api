@@ -5,39 +5,40 @@ const url = require('url');
 
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
-const { users } = require('../../fixtures');
+const { users, events } = require('../../fixtures');
 
-lab.experiment('GET /users/', () => {
-  let user;
+lab.experiment('GET /events/', () => {
+  let event;
   let Authorization;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users });
-    user = data.users[0];
+    const data = await fixtures.create({ users, events });
+    event = data.events[0];
     const authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users });
+    return destroyRecords({ users, events });
   });
 
-  lab.test('should retrieve my information when logged in', (done) => {
+  lab.test('should retrieve event information when logged in', (done) => {
+    console.log('boo');
     const options = {
       url: url.format({
-        pathname: '/users/',
-        query: {
-          email: users[0].email,
-        },
+        pathname: '/events',
       }),
       method: 'GET',
       headers: { Authorization },
     };
 
+    console.log('hi');
     server.inject(options, (res) => {
+      console.log('res', res);
       expect(res.statusCode).to.equal(200);
       expect(res.result).to.be.an.array();
-      expect(res.result[0].email).to.equal(user.email);
+      expect(res.result[0].name).to.equal('foo');
+      expect(res.result[0].name).to.not.equal('foo');
       done();
     });
   });
@@ -45,9 +46,9 @@ lab.experiment('GET /users/', () => {
   lab.test.skip('should error with invalid query', (done) => {
     const options = {
       url: url.format({
-        pathname: '/users/',
+        pathname: '/events/',
         query: {
-          kaboom: users[0].email,
+          kaboom: events[0].name,
         },
       }),
       method: 'GET',
@@ -62,9 +63,9 @@ lab.experiment('GET /users/', () => {
   lab.test('should return empty array if none found', (done) => {
     const options = {
       url: url.format({
-        pathname: '/users/',
+        pathname: '/events/',
         query: {
-          email: 'hardyharharharhar',
+          name: 'hardyharharharhar',
         },
       }),
       method: 'GET',
@@ -82,9 +83,9 @@ lab.experiment('GET /users/', () => {
   lab.test('should error with no auth', (done) => {
     const options = {
       url: url.format({
-        pathname: '/users/',
+        pathname: '/events/',
         query: {
-          email: users[0].email,
+          name: events[0].name,
         },
       }),
       method: 'GET',

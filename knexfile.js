@@ -7,5 +7,5 @@ module.exports = {
   },
   seeds: {
     directory: './migrations/seed'
-  }
-};
+  },
+}

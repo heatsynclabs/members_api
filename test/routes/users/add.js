@@ -7,13 +7,14 @@ const { omit } = require('lodash');
 
 const bread = require('../../../lib/bread');
 const server = require('../../../');
-const { destroyRecords, destroyTokens } = require('../../fixture-client');
+const { destroyRecords, destroyTokens, fixtures } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 const { databaseError } = require('../../../lib/errors');
 
 lab.experiment('POST /user', () => {
   // eslint-disable-next-line
   let tokens = [];
+
   lab.after(() => {
     return destroyRecords({ users })
       .then(destroyTokens(tokens));
@@ -71,7 +72,7 @@ lab.experiment('POST /user', () => {
       method: 'POST',
       payload: user,
     };
-    console.log('injecting', options);
+
     server.inject(options, (res) => {
       console.log('res', res, res.statusCode);
       expect(res.statusCode).to.equal(500);
