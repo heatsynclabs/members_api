@@ -28,6 +28,6 @@ before_deploy:
 
 deploy:
   provider: script
-  script: docker push registry.heroku.com/$HEROKU_APP/web && heroku container:release web -a $HEROKU_APP
+  script: docker push registry.heroku.com/$HEROKU_APP/web && HEROKU_API_KEY=$HEROKU_AUTH_TOKEN heroku container:release web -a $HEROKU_APP
   on:
     branch: master
