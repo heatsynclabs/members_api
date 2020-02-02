@@ -1,6 +1,10 @@
 echo "Database URL is $DATABASE_URL"
 echo "NODE_ENV is $NODE_ENV"
 
+echo "Setting PATH from $PATH ..."
+export PATH=$PATH:$(pwd)/node_modules/.bin
+echo "... to $PATH"
+
 if [[ $PORT  ]]
 then
   export NODE_PORT=$PORT
