@@ -28,5 +28,6 @@ before_deploy:
 
 deploy:
   provider: script
-  script:
-    docker push registry.heroku.com/$HEROKU_APP/web
+  script: docker push registry.heroku.com/$HEROKU_APP/web && heroku container:release web -a $HEROKU_APP
+  on:
+    branch: master
