@@ -13,8 +13,8 @@
     "up": "knex migrate:latest",
     "down": "knex migrate:rollback"
   },
-  "author": "Iced Dev",
-  "license": "ISC",
+  "author": "Iced Development, LLC",
+  "license": "Apache-2.0",
   "dependencies": {
     "@sendgrid/mail": "^6.2.1",
     "bcrypt": "^3.0.6",
