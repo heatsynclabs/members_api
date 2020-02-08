@@ -6,6 +6,8 @@
 
 This is the API component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info.
 
+See https://github.com/heatsynclabs/members_app/ for general readme information.
+
 ## Normal Docker Dev Usage
 
 **Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
