@@ -1,7 +1,9 @@
 {
-  "name": "hsl-api",
+  "name": "members_api",
   "version": "1.0.0",
-  "description": "hsl members api",
+  "description": "HSL Members API",
+  "author": "Iced Development, LLC",
+  "license": "Apache-2.0",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -13,8 +15,6 @@
     "up": "knex migrate:latest",
     "down": "knex migrate:rollback"
   },
-  "author": "Iced Development, LLC",
-  "license": "Apache-2.0",
   "dependencies": {
     "@sendgrid/mail": "^6.2.1",
     "bcrypt": "^3.0.6",

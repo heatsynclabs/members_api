@@ -1,8 +1,10 @@
+# Member Management API
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-[![Build Status](https://travis-ci.com/heatsynclabs/api.svg?token=SBSA1SGpDCdD2HrQ2zPH&branch=master)](https://travis-ci.com/heatsynclabs/api)
+[![Build Status](https://travis-ci.com/heatsynclabs/members_api.svg?branch=master)](https://travis-ci.com/heatsynclabs/members_api)
 
-# Members DB API
+This is the API component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info.
 
 ## Normal Docker Dev Usage
 
