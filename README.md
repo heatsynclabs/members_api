@@ -4,6 +4,8 @@
 
 # Members DB API
 
+See https://github.com/heatsynclabs/members_app/ for general readme information.
+
 ## Normal Docker Dev Usage
 
 **Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
