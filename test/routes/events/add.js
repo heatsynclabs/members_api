@@ -29,6 +29,7 @@ lab.experiment('POST /events', () => {
   let Authorization;
 
   lab.before(async () => {
+    await destroyRecords({ users, events });
     const data = await fixtures.create({ users });
     user = data.users[0];
     authRes = await getAuthToken(data.users[0]);

@@ -28,7 +28,7 @@ lab.experiment('GET /events/{event_id}', () => {
   let Authorization;
 
   lab.before(async () => {
-    destroyRecords({ users, events });
+    await destroyRecords({ users, events });
     const data = await fixtures.create({ users, events });
     event = data.events[0];
     event2 = data.events[1];
