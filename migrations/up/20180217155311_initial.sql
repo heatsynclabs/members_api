@@ -185,3 +185,4 @@ INSERT INTO certifications (id, name, description, created_at, updated_at) VALUE
 ALTER SEQUENCE certifications_id_seq RESTART WITH 11;
 
 INSERT INTO events (id,name, description, start_date, end_date, frequency, location) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a6a','Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs');
+INSERT INTO events (id,name, description, start_date, end_date, frequency, location) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a7b','3D Printing Class', 'Join this class!' || chr(13) || chr(10) || 'Literally the most fun you will ever have.<br/>I <i>promise</i>.', '2019-11-12 14:00:00', '2019-11-12 16:00:00', 'biweekly', 'HeatSync Labs');
