@@ -25,6 +25,12 @@ then
   echo "Setting NODE_PORT=$PORT based on PORT"
 fi
 
+if [[ $NPMINSTALL == 1  ]]
+then
+  echo "Running npm install since NPMINSTALL=$NPMINSTALL"
+  npm install
+fi
+
 if [[ $NODE_ENV == "production" ]]
 then
   npm run start

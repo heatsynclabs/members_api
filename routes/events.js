@@ -16,6 +16,7 @@ const Joi = require('joi');
 const { omit } = require('lodash');
 
 const {
+  add,
   browse,
   byIdCached
 } = require('../lib/events');
@@ -67,7 +68,7 @@ module.exports = [
       handler: req => byIdCached(req.params.event_id),
       description: 'Gets a event',
       notes: 'Returns back the specified event object',
-      tags: ['api'], // ADD THIS TAG
+      tags: ['api','events'],
       validate: {
         params: {
           event_id: Joi.string().uuid().required(),
@@ -75,5 +76,22 @@ module.exports = [
       },
     },
   },
-  //TODO: CREATE,UPDATE,DELETE
+  {
+    method: 'POST',
+    path: '/events',
+    handler: req => add(req.payload),
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: ['USER'],
+      },
+      description: 'Add A Event',
+      notes: 'Adds a Event',
+      tags: ['api', 'events'],
+      validate: {
+        payload: omit(required, ['id']),
+      },
+    },
+  },
+  //TODO: UPDATE,DELETE
 ];

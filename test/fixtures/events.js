@@ -19,9 +19,9 @@ const event = new Factory();
 
 event
   // .attr('id')
-  .attr('name')
+  .attr('name', faker.name.jobTitle)
   // .attr('description')
-  .attr('start_date')
+  .attr('start_date', faker.date.future)
   // .attr('end_date')
   .attr('frequency')
   .attr('location');
@@ -29,11 +29,20 @@ event
 const fixture = [
   event.build({
     // id: '44fecd99-3400-449a-b13c-61ad7ffd1d11',
-    name: 'Laser Class',
+    // name: 'Laser Class',
     // description: 'Join this class!\r\nIt\'s fun!',
-    start_date: new Date('2019-10-11 13:00:00'),
+    // start_date: new Date('2019-10-11 13:00:00'),
     // end_date: '2019-10-11 15:00:00',
     frequency: 'weekly',
+    location: 'HeatSync Labs',
+  }),
+  event.build({
+    // id: '44fecd99-3400-449a-b13c-61ad7ffd1d11',
+    // name: '3D Printer Class',
+    // description: 'Join this class!\r\nIt\'s fun!',
+    // start_date: new Date('2019-11-12 14:00:00'),
+    // end_date: '2019-10-11 15:00:00',
+    frequency: 'biweekly',
     location: 'HeatSync Labs',
   }),
 ];

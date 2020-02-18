@@ -35,6 +35,9 @@ lab.experiment('POST /user', () => {
   });
 
   lab.test('should create a user', async () => {
+    // start with a clean db so we can insert
+    destroyRecords({ users });
+
     const user = omit(users[0], ['id', 'is_validated', 'is_deleted']);
     const options = {
       url: url.format('/users'),
@@ -63,7 +66,7 @@ lab.experiment('POST /user', () => {
     expect(res.statusCode).to.equal(400);
   });
 
-  lab.test('should error with duplicate email', (done) => {
+  lab.test('should error with duplicate email', async () => {
     const user = omit(users[0], ['id', 'is_validated', 'is_deleted']);
     const options = {
       url: url.format('/users'),
@@ -71,11 +74,9 @@ lab.experiment('POST /user', () => {
       payload: user,
     };
 
-    server.inject(options, (res) => {
-      expect(res.statusCode).to.equal(422);
-      expect(res.result).to.be.an.object();
-      done();
-    });
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(422);
+    expect(res.result).to.be.an.object();
   });
 
   lab.test('should return an error if unable to connect to the database', (done) => {
@@ -88,7 +89,6 @@ lab.experiment('POST /user', () => {
     };
 
     server.inject(options, (res) => {
-      console.log('res', res, res.statusCode);
       expect(res.statusCode).to.equal(500);
       stub.restore();
       done();
