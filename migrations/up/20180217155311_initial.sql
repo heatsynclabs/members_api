@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS events (
   end_date DATE,
   frequency TEXT,
   location TEXT,
+  is_deleted BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ
 );
