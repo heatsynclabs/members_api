@@ -75,5 +75,24 @@ module.exports = [
       },
     },
   },
-  //TODO: CREATE,UPDATE,DELETE
+  {
+    method: 'DELETE',
+    path: '/events/{event_id}',
+    config: {
+      auth: {
+        strategy: 'jwt',
+        scope: ['USER'],
+      },
+      handler: req => del(req.params.event_id),
+      description: 'Deletes an Event',
+      notes: 'Deletes an Event',
+      tags: ['api'], // ADD THIS TAG
+      validate: {
+        params: {
+          event_id: Joi.string().uuid().required(),
+        },
+      },
+    },
+  },
+  //TODO: CREATE,UPDATE
 ];
