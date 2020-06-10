@@ -17,6 +17,7 @@ const { omit } = require('lodash');
 
 const {
   browse,
+  del,
   byIdCached
 } = require('../lib/events');
 const { resetRequest, resetPassword } = require('../lib/reset');

@@ -19,14 +19,17 @@ const url = require('url');
 
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
-const { events } = require('../../fixtures');
+const { users, events } = require('../../fixtures');
 
 lab.experiment('DELETE /events/', () => {
   let sampleEvent;
+  let Authorization;
 
   lab.before(async () => {
-    const data = await fixtures.create({ events });
+    const data = await fixtures.create({ users, events });
     sampleEvent = data.events[0];
+    const authRes = await getAuthToken(data.users[0]);
+    Authorization = authRes.token;
   });
 
   lab.after(() => {
@@ -35,14 +38,14 @@ lab.experiment('DELETE /events/', () => {
 
   lab.test('should successfully delete an event', async () => {
     const options = {
-      url: url.format(`/events/${event.id}`),
+      url: url.format(`/events/${sampleEvent.id}`),
       method: 'DELETE',
       headers: { Authorization },
     };
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
-    expect(res.result.id).to.equal(event.id);
+    expect(res.result.id).to.equal(sampleEvent.id);
     expect(res.result.is_deleted).to.equal(true);
   });
 });

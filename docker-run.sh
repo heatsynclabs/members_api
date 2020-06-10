@@ -24,6 +24,10 @@ then
   export NODE_PORT=$PORT
   echo "Setting NODE_PORT=$PORT based on PORT"
 fi
+if [[ $NPMINSTALL == 1]]
+then
+  npm install
+fi
 
 if [[ $NODE_ENV == "production" ]]
 then
