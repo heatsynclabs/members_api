@@ -62,3 +62,26 @@ To run tests or coverage, we use lab:
 
   - `npm run test`
   - `npm run coverage`
+
+## Manual testing/usage
+
+Assuming your docker and/or node are on port 3004, you can run:
+
+Authenticate:
+
+  `curl -X POST -d 'email=admin@example.com&password=Testing1!' localhost:3004/auth`
+  `export MY_AUTH_TOKEN=PASTE_YOUR_AUTH_TOKEN_HERE`
+
+All users:
+
+  `curl -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/users/all`
+
+All events:
+
+  `curl -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/events`
+
+Create an event:
+  `curl -X POST -H "Authorization: Bearer $MY_AUTH_TOKEN" -d "name=Foo Bar&start_date=2020-07-01" localhost:3004/events`
+
+Delete an event:
+  `curl -X DELETE -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/events/YOUR_EVENT_ID_HERE`
