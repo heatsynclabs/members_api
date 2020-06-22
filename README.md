@@ -20,6 +20,19 @@ And edit it as desired:
 
 Take note of port numbers, DATABASE_URL, SENDGRID_API_KEY, and volume paths.
 
+You can add the following parameters to the docker-compose file if desired:
+  - `NPMINSTALL: 1`
+    - allows you to re-run npm install on boot so that if you're using volumes your local filesystem is prepared to run the app (not just the filesystem inside the docker image)
+  - `volumes:`
+      - `.:/home/app`
+      - mounts "this" folder in the /home/app directory of the docker image so that you can edit files locally and have them appear inside docker.
+
+If you have issues with docker volumes (i.e. local file changes don't affect the docker filesystem), try rebuilding:
+  - delete all images and containers locally with `docker rm <container_id> && docker rmi <image_id>`
+  - `docker-compose down`
+  - `docker-compose build --no-cache`
+  - `docker-compose up --verbose`
+
 Review the `Dockerfile` so you know what's about to be booted. For example, the working directory, package.json, and CMD (including npm install and fixture-installation commands) lines which by default will affect your environment.
 
 Create the docker container for the api and database:
