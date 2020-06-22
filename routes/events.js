@@ -16,6 +16,7 @@ const Joi = require('joi');
 const { omit } = require('lodash');
 
 const {
+  add,
   browse,
   add,
   edit,
@@ -70,7 +71,7 @@ module.exports = [
       handler: req => byIdCached(req.params.event_id),
       description: 'Gets a event',
       notes: 'Returns back the specified event object',
-      tags: ['api'], // ADD THIS TAG
+      tags: ['api','events'],
       validate: {
         params: {
           event_id: Joi.string().uuid().required(),

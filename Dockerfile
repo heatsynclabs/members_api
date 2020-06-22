@@ -21,6 +21,10 @@ RUN apk add \
   build-base \
   python2
 
+# Make a little bash profile script for dev work
+RUN echo 'export PATH=$PATH:$(pwd)/node_modules/.bin \
+  echo "Setting PATH=$PATH"' > /root/.profile
+
 WORKDIR /home/app
 
 COPY package.json /home/app/

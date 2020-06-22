@@ -29,6 +29,12 @@ then
   npm install
 fi
 
+if [[ $NPMINSTALL == 1  ]]
+then
+  echo "Running npm install since NPMINSTALL=$NPMINSTALL"
+  npm install
+fi
+
 if [[ $NODE_ENV == "production" ]]
 then
   npm run start

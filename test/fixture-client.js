@@ -29,6 +29,7 @@ const fixturesConfig = {
 const fixtures = new Fixtures(fixturesConfig);
 
 const deleteOrder = [
+  'events',
   'time_token',
   'users',
 ];
@@ -53,15 +54,8 @@ module.exports = {
 
     return promise.each(deleteRecords, (table) => {
       const tableName = keys(table)[0];
-      const ids = values(table)[0];
-      let key = 'id';
-
-      if (tableName === 'users') {
-        key = 'email';
-      }
 
       return knex(tableName)
-        .whereIn(key, ids)
         .del()
         .then(() => tableName)
         .catch((err) => {

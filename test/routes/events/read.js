@@ -16,22 +16,22 @@ const { expect } = require('code');
 // eslint-disable-next-line
 const lab = exports.lab = require('lab').script();
 const url = require('url');
-const { omit } = require('lodash');
 
 const server = require('../../../');
 const { destroyRecords, destroyTokens, getAuthToken, fixtures } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
-const { databaseError } = require('../../../lib/errors');
 
-lab.experiment('POST /events', () => {
-  let user;
+lab.experiment('GET /events/{event_id}', () => {
+  let event;
+  let event2;
   let authRes;
   let Authorization;
 
   lab.before(async () => {
     await destroyRecords({ users, events });
-    const data = await fixtures.create({ users });
-    user = data.users[0];
+    const data = await fixtures.create({ users, events });
+    event = data.events[0];
+    event2 = data.events[1];
     authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
@@ -41,71 +41,68 @@ lab.experiment('POST /events', () => {
       .then(destroyTokens([authRes.id]));
   });
 
-  lab.test('should create a event', async () => {
-    const event = omit(events[0], ['id']);
+  lab.test('should return a event by id', async () => {
     const options = {
-      url: url.format('/events'),
-      method: 'POST',
-      payload: event,
+      url: url.format(`/events/${event.id}`),
+      method: 'GET',
       headers: { Authorization },
     };
+
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
     expect(res.result).to.be.an.object();
-    expect(res.result).to.include('id');
+    expect(res.result.name).to.equal(events[0].name);
+    expect(res.result).to.not.include('password');
   });
 
-  lab.test('should error with missing name', async () => {
-    const event = omit(events[1], ['id','name']);
+  // currently everyone can see every event. save this test for later.
+  // lab.test('should error if requesting a event not authorized to view', async () => {
+  //   const options = {
+  //     url: url.format(`/events/${event2.id}`),
+  //     method: 'GET',
+  //     headers: { Authorization },
+  //   };
+
+  //   const res = await server.inject(options);
+  //   expect(res.statusCode).to.equal(403);
+  //   expect(res.result).to.be.an.object();
+  //   expect(res.result).to.not.include('password');
+  // });
+
+  lab.test('should error if event is not found', async () => {
+    // TODO needs to be an admin
     const options = {
-      url: url.format('/events'),
-      method: 'POST',
-      payload: event,
+      url: url.format('/events/bada5599-3400-449a-b13c-61ad7ffd1d77'),
+      method: 'GET',
       headers: { Authorization },
     };
 
     const res = await server.inject(options);
-    expect(res.statusCode).to.equal(400);
-  });
-
-  lab.test('should error with missing start_date', async () => {
-    const event = omit(events[1], ['id','start_date']);
-    const options = {
-      url: url.format('/events'),
-      method: 'POST',
-      payload: event,
-      headers: { Authorization },
-    };
-
-    const res = await server.inject(options);
-    expect(res.statusCode).to.equal(400);
-  });
-
-  lab.test('should error with duplicate name and start date', async () => {
-    const event = omit(events[0], ['id']);
-    const options = {
-      url: url.format('/events'),
-      method: 'POST',
-      payload: event,
-      headers: { Authorization },
-    };
-
-    const res = await server.inject(options);
-    expect(res.statusCode).to.equal(422);
+    expect(res.statusCode).to.equal(404);
     expect(res.result).to.be.an.object();
   });
 
-  lab.test('should error with no auth', async () => {
-    const event = omit(events[1], ['id']);
+
+  lab.test('should error with invalid event_id', async () => {
     const options = {
-      url: url.format('/events'),
-      method: 'POST',
-      payload: event,
+      url: url.format('/events/notgood'),
+      method: 'GET',
+      headers: { Authorization },
+    };
+
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(400);
+    expect(res.result).to.be.an.object();
+  });
+  lab.test('should error if no auth token is found', async () => {
+    const options = {
+      url: url.format(`/events/${event.id}`),
+      method: 'GET',
     };
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(401);
+    expect(res.result).to.be.an.object();
   });
-
 });
