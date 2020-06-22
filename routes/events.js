@@ -18,6 +18,9 @@ const { omit } = require('lodash');
 const {
   add,
   browse,
+  add,
+  edit,
+  del,
   byIdCached
 } = require('../lib/events');
 const { resetRequest, resetPassword } = require('../lib/reset');
@@ -77,21 +80,52 @@ module.exports = [
     },
   },
   {
-    method: 'POST',
-    path: '/events',
-    handler: req => add(req.payload),
+    method: 'DELETE',
+    path: '/events/{event_id}',
     config: {
       auth: {
         strategy: 'jwt',
         scope: ['USER'],
       },
-      description: 'Add A Event',
-      notes: 'Adds a Event',
+      handler: req => del(req.params.event_id),
+      description: 'Deletes an Event',
+      notes: 'Deletes an Event',
+      tags: ['api'], // ADD THIS TAG
+      validate: {
+        params: {
+          event_id: Joi.string().uuid().required(),
+        },
+      },
+    },
+  },
+  {
+    method: 'POST',
+    path: '/events',
+    handler: req => add(req.payload),
+    config: {
+      auth: false,
+      description: 'Add An Event',
+      notes: 'Adds an Event',
       tags: ['api', 'events'],
       validate: {
         payload: omit(required, ['id']),
       },
     },
   },
-  //TODO: UPDATE,DELETE
+  {
+    method: 'PATCH',
+    path: '/events/{event_id}',
+    handler: req => edit(req.payload),
+    config: {
+      auth: false,
+      description: 'Edit An Event',
+      notes: 'Edit an Event',
+      tags: ['api', 'events'],
+      validate: {
+        params: {
+          event_id: Joi.string().uuid().required(),
+        },
+      },
+    },
+  },
 ];

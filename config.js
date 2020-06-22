@@ -27,6 +27,13 @@ const connectionOptions = {
     host: '0.0.0.0',
     port: port,
     routes: {
+      // validate: {
+      //   failAction: async (request, h, err) => {
+      //     // in test, log and respond with the full error.
+      //     console.error(err);
+      //     throw err;
+      //   }
+      // },
       cors: {
         credentials: true,
         origin: ['*'],
@@ -38,6 +45,13 @@ const connectionOptions = {
     host: '0.0.0.0',
     port: port,
     routes: {
+      // validate: {
+      //   failAction: async (request, h, err) => {
+      //     // in development, log and respond with the full error.
+      //     console.error(err);
+      //     throw err;
+      //   }
+      // },
       cors: {
         credentials: true,
         origin: ['*'],
