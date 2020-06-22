@@ -21,7 +21,7 @@ const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 
-lab.experiment('DELETE /events/', () => {
+lab.experiment('PATCH /events/', () => {
   let sampleEvent;
   let Authorization;
 
@@ -33,19 +33,20 @@ lab.experiment('DELETE /events/', () => {
   });
 
   lab.after(() => {
-    return destroyRecords({ users, events }); // or try only events
+    return destroyRecords({ users, events });
   });
 
-  lab.test('should successfully delete an event', async () => {
+  lab.test('should successfully edit an event', async () => {
+    sampleEvent['name'] = 'fookie';
     const options = {
       url: url.format(`/events/${sampleEvent.id}`),
-      method: 'DELETE',
+      method: 'PATCH',
       headers: { Authorization },
+      payload: sampleEvent,
     };
-
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
     expect(res.result.id).to.equal(sampleEvent.id);
-    expect(res.result.is_deleted).to.equal(true);
+    expect(res.result.name).to.equal('fookie');
   });
 });

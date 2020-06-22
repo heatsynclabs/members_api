@@ -17,6 +17,8 @@ const { omit } = require('lodash');
 
 const {
   browse,
+  add,
+  edit,
   del,
   byIdCached
 } = require('../lib/events');
@@ -95,5 +97,34 @@ module.exports = [
       },
     },
   },
-  //TODO: CREATE,UPDATE
+  {
+    method: 'POST',
+    path: '/events',
+    handler: req => add(req.payload),
+    config: {
+      auth: false,
+      description: 'Add An Event',
+      notes: 'Adds an Event',
+      tags: ['api', 'events'],
+      validate: {
+        payload: omit(required, ['id']),
+      },
+    },
+  },
+  {
+    method: 'PATCH',
+    path: '/events/{event_id}',
+    handler: req => edit(req.payload),
+    config: {
+      auth: false,
+      description: 'Edit An Event',
+      notes: 'Edit an Event',
+      tags: ['api', 'events'],
+      validate: {
+        params: {
+          event_id: Joi.string().uuid().required(),
+        },
+      },
+    },
+  },
 ];
