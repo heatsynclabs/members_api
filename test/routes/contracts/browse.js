@@ -19,27 +19,27 @@ const url = require('url');
 
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
-const { users, events } = require('../../fixtures');
+const { users, contracts } = require('../../fixtures');
 
-lab.experiment('GET /events/', () => {
-  let event;
+lab.experiment('GET /contracts/', () => {
+  let contract;
   let Authorization;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users, events });
-    event = data.events[0];
+    const data = await fixtures.create({ users, contracts });
+    contract = data.contracts[0];
     const authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users, events });
+    return destroyRecords({ users, contracts });
   });
 
-  lab.test('should retrieve event information when logged in', (done) => {
+  lab.test('should retrieve contract information when logged in', (done) => {
     const options = {
       url: url.format({
-        pathname: '/events',
+        pathname: '/contracts',
       }),
       method: 'GET',
       headers: { Authorization },
@@ -58,9 +58,9 @@ lab.experiment('GET /events/', () => {
   lab.test.skip('should error with invalid query', (done) => {
     const options = {
       url: url.format({
-        pathname: '/events/',
+        pathname: '/contracts/',
         query: {
-          kaboom: events[0].name,
+          kaboom: contracts[0].name,
         },
       }),
       method: 'GET',
@@ -75,7 +75,7 @@ lab.experiment('GET /events/', () => {
   lab.test('should return empty array if none found', (done) => {
     const options = {
       url: url.format({
-        pathname: '/events/',
+        pathname: '/contracts/',
         query: {
           name: 'hardyharharharhar',
         },
@@ -95,9 +95,9 @@ lab.experiment('GET /events/', () => {
   lab.test('should error with no auth', (done) => {
     const options = {
       url: url.format({
-        pathname: '/events/',
+        pathname: '/contracts/',
         query: {
-          name: events[0].name,
+          name: contracts[0].name,
         },
       }),
       method: 'GET',

@@ -166,8 +166,8 @@ ON events FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
 
 -- seed data
-INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100) RETURNING id INTO admin_id;
-INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'gobie@example.com','Gobie McDaniels',true,5) RETURNING id INTO gobie_id;
+INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);
+INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'gobie@example.com','Gobie McDaniels',true,5);
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'jimbo@example.com','Jimbo Fargo',false,1);
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'hardy@example.com','Hardy Bridle',true,10);
 
@@ -189,4 +189,4 @@ ALTER SEQUENCE certifications_id_seq RESTART WITH 11;
 
 INSERT INTO events (id,name, description, start_date, end_date, frequency, location) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a6a','Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs');
 
-INSERT INTO contracts (first_name, user_id, document_file_name, signed_at) VALUES('Gobie', gobie_id, 'gobie_contract.pdf', '2015-02-25 11:21:24.442211');
+INSERT INTO contracts (first_name, document_file_name, signed_at) VALUES('Gobie', 'gobie_contract.pdf', '2015-02-25 11:21:24.442211');

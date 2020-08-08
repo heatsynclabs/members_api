@@ -22,10 +22,10 @@ const { omit } = require('lodash');
 const bread = require('../../../lib/bread');
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
-const { users, events } = require('../../fixtures');
+const { users, contracts } = require('../../fixtures');
 const { databaseError } = require('../../../lib/errors');
 
-lab.experiment('POST /events', () => {
+lab.experiment('POST /contracts', () => {
   let user;
   let Authorization;
   lab.before(async () => {
@@ -36,23 +36,18 @@ lab.experiment('POST /events', () => {
   });
 
   lab.after(() => {
-    return destroyRecords({ events, users })
+    return destroyRecords({ contracts, users })
   });
 
-  lab.test('should create an event', async () => {
-    const e = {
-      name: 'Laser Class Test',
-      // description: 'Join this class!\r\nIt\'s fun!',
-      start_date: new Date('2019-11-11 13:00:00'),
-      // end_date: '2019-10-11 15:00:00',
-      frequency: 'weekly',
-      location: 'HeatSync Labs',
+  lab.test('should create a contract', async () => {
+    const contract = {
+      first_name: 'Foobar',
+      signed_at: new Date('2019-11-11 13:00:00'),
     }
-
     const options = {
-      url: url.format('/events'),
+      url: url.format('/contracts'),
       method: 'POST',
-      payload: e,
+      payload: contract,
       headers: { Authorization },
     };
 

@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module.exports = {
-  /* eslint-disable */
-  users: require('./users'),
-  events: require('./events'),
-  contracts: require('./contracts'),
-  time_token: require('./time_token'),
-  tokens: require('./tokens')
-  /* eslint-enable */
-};
+const faker = require('faker');
+const { Factory } = require('rosie');
+
+const contract = new Factory();
+
+contract
+  .attr('first_name')
+  .attr('signed_at');
+
+const fixture = [
+  contract.build({
+    first_name: faker.name.firstName(),
+    signed_at: faker.date.past(),
+  }),
+];
+
+module.exports = fixture;
