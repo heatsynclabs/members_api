@@ -102,7 +102,10 @@ module.exports = [
     path: '/events',
     handler: req => add(req.payload),
     config: {
-      auth: false,
+      auth: {
+        strategy: 'jwt',
+        scope: ['USER'],
+      },
       description: 'Add An Event',
       notes: 'Adds an Event',
       tags: ['api', 'events'],
@@ -116,7 +119,10 @@ module.exports = [
     path: '/events/{event_id}',
     handler: req => edit(req.payload),
     config: {
-      auth: false,
+      auth: {
+        strategy: 'jwt',
+        scope: ['USER'],
+      },
       description: 'Edit An Event',
       notes: 'Edit an Event',
       tags: ['api', 'events'],
