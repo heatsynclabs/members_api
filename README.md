@@ -85,3 +85,21 @@ Create an event:
 
 Delete an event:
   `curl -X DELETE -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/events/YOUR_EVENT_ID_HERE`
+
+All contracts:
+
+  `curl -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/contracts`
+
+Create an contract:
+  `curl -X POST -H "Authorization: Bearer $MY_AUTH_TOKEN" -d "first_name=Foo&signed_at=2020-07-01" localhost:3004/contracts`
+
+Update a contract:
+  `curl -X PATCH -H "Authorization: Bearer $MY_AUTH_TOKEN" -d "first_name=Bar" localhost:3004/contracts/YOUR_CONTRACT_ID_HERE`
+
+Delete an contract:
+  `curl -X DELETE -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/contracts/YOUR_CONTRACT_ID_HERE`
+
+### Upgrading old database
+
+- Add the is_deleted column to contracts
+- Add the events table
