@@ -33,7 +33,7 @@ module.exports = [
     path: '/certs',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       handler: browse,
@@ -47,13 +47,13 @@ module.exports = [
     handler: req => add(req.payload),
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['ADMIN'],
       },
       description: 'Add A Certification',
       tags: ['api', 'certs'],
       validate: {
-        payload: omit(cert, ['id']),
+        payload: Joi.object(omit(cert, ['id'])),
       },
     },
   }

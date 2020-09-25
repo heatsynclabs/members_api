@@ -13,8 +13,9 @@
 // limitations under the License.
 
 const Joi = require('joi');
+const { omit } = require('lodash');
 
-const { login } = require('../lib/users');
+const { login, oauthStart, oauthCallback, oauthTokenLogin, emailLogin, emailSignupVerify } = require('../lib/users');
 
 const auth = [
   {
@@ -27,11 +28,128 @@ const auth = [
       notes: 'Logs into the server with the email and password, requests the placement of a quicky and auth token.',
       tags: ['api'],
       validate: {
-        payload: {
+        payload: Joi.object({
           email: Joi.string().email().required(),
           password: Joi.string().min(2).max(200).required(),
-        },
+        }),
       },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/users/oauth_start',
+    handler: async (req, h) => {
+      const result = await oauthStart(req.query.mode);
+      if (result.rfp) {
+        // console.log('setting cookie', result.rfp)
+        h.response(result).state('r', result.rfp, { encoding: 'none', strictHeader: false, isSameSite: false, isSecure: false, isHttpOnly: true, path: '/',  });
+      }
+      return omit(result, ['rfp']);
+    },
+    config: {
+      auth: false,
+      description: 'Starts oauth process with list of providers.',
+      notes: 'Starts oauth process with list of providers.',
+      tags: ['api'],
+      validate: {
+        query: Joi.object({
+          mode: Joi.string()
+        })
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/users/oauth',
+    handler: async (req, h) => {
+      const url = await oauthCallback(req.query);
+      // req.cookieAuth.set(omit(tokenData, 'token'));
+      return h.redirect(url);
+    },
+    config: {
+      auth: false,
+      description: 'Oauth callback',
+      notes: 'Oauth callback',
+      tags: ['api'],
+      validate: {
+
+      },
+    },
+  },
+  {
+    method: 'POST',
+    path: '/users/oauth_token',
+    handler: async (req, h) => {
+      console.log('oauth', req.payload);
+      const {token, user} = await oauthTokenLogin(req.payload.token);
+      console.log('setting cookieauth', user, token);
+      req.cookieAuth.set(omit(token, 'token'));
+      user.token = token.token;
+      return user;
+    },
+    config: {
+      auth: false,
+      description: 'Log In via oauth token',
+      notes: 'Log In via oauth token.',
+      tags: ['api'],
+      validate: {
+        payload: Joi.object({
+          token: Joi.string().uuid().required(),
+        }),
+      },
+    },
+  },
+  {
+    method: 'POST',
+    path: '/users/email_login',
+    handler: async (req, h) => {
+      console.log('email_login', req.payload);
+      return emailLogin(req.payload.email);
+    },
+    config: {
+      auth: false,
+      description: 'Log In via oauth token',
+      notes: 'Log In via oauth token.',
+      tags: ['api'],
+      validate: {
+        payload: Joi.object({
+          email: Joi.string().email().required(),
+        }),
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/users/email_token/{token}',
+    handler: async (req, h) => {
+      console.log('email_login', req.params);
+      const url = await emailSignupVerify(req.params.token);
+      return h.redirect(url); 
+    },
+    config: {
+      auth: false,
+      description: 'Log In via oauth token',
+      notes: 'Log In via oauth token.',
+      tags: ['api'],
+      validate: {
+        params: Joi.object({
+          token: Joi.string().uuid().required(),
+        }),
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/users/logout',
+    handler: async (req, h) => {
+      req.cookieAuth.clear()
+      return 'ok'
+    },
+    config: {
+      auth: false,
+      description: 'Log out',
+      notes: 'Log out.',
+      tags: ['api'],
     },
   },
 ];

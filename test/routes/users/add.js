@@ -87,6 +87,7 @@ lab.experiment('POST /user', () => {
       payload: user,
     };
 
+    // console.log('injecting', options);
     server.inject(options, (res) => {
       console.log('res', res, res.statusCode);
       expect(res.statusCode).to.equal(500);

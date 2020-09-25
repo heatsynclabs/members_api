@@ -26,7 +26,11 @@ $$ language 'plpgsql';
 
 CREATE TYPE token_type AS ENUM (
   'RESET',
-  'VALIDATION'
+  'VALIDATION',
+  'OAUTH',
+  'SIGNUP',
+  'INVITE',
+  'LOGIN'
 );
 
 CREATE TABLE IF NOT EXISTS payment_methods (
@@ -43,6 +47,7 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT,
   nickname TEXT,
   phone TEXT,
+  options JSON,
   postal_code TEXT,
   current_skills TEXT,
   desired_skills TEXT,
@@ -63,6 +68,7 @@ CREATE TABLE IF NOT EXISTS users (
   is_deleted BOOLEAN DEFAULT false,
   is_validated BOOLEAN DEFAULT false,
   email_visible BOOLEAN DEFAULT true,
+  last_login TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ,
   deleted_at TIMESTAMPTZ
@@ -89,6 +95,7 @@ CREATE TABLE IF NOT EXISTS memberships (
 CREATE TABLE IF NOT EXISTS time_token (
   id UUID NOT NULL DEFAULT uuid_generate_v4(),
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  email TEXT,
   token_type token_type,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   used_at TIMESTAMPTZ DEFAULT NULL
@@ -163,6 +170,18 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TRIGGER updated_at_trigger BEFORE UPDATE
 ON events FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
+CREATE OR REPLACE VIEW user_groups_v AS
+SELECT
+  u.*,
+  COALESCE(
+    (
+      SELECT json_agg(memberships.group_id)
+      FROM memberships
+      WHERE user_id = u.id
+    ), '[]'::json
+  ) AS scope
+FROM
+  users AS u;
 
 -- seed data
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);

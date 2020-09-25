@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Copyright 2019 Iced Development, LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +16,14 @@
 const Hapi = require('hapi');
 const Vision = require('vision');
 const Inert = require('inert');
+=======
+const Hapi = require('@hapi/hapi');
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
+>>>>>>> 013c909... working oauth
 const JWTAuth = require('hapi-auth-jwt2');
 const HapiSwagger = require('hapi-swagger');
+const CookieAuth = require('@hapi/cookie');
 const debug = require('debug')('errors');
 const config = require('./config');
 const { validateJWT } = require('./lib/users');
@@ -36,6 +43,7 @@ async function start() {
   // register hapi-now-auth plugin
   try {
     await server.register([
+      CookieAuth,
       JWTAuth,
       Inert,
       Vision,
@@ -50,6 +58,12 @@ async function start() {
     process.exit(1);
   }
 
+  server.auth.strategy('auth', 'cookie', {
+    cookie: config.cookies,
+    validateFunc: async (request, session) => {
+      return { valid: true };
+    }
+  });
   server.auth.strategy('jwt', 'jwt', {
     verifyOptions: { algorithms: ['HS256'] },
     key: config.jwt.password,

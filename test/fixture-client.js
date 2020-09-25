@@ -35,7 +35,7 @@ const deleteOrder = [
 
 module.exports = {
   destroyRecords(tables) {
-    console.log('destroying records');
+    // console.log('destroying records');
     const deleteRecords = [];
 
     forEach(deleteOrder, (tableName) => {

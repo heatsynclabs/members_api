@@ -31,7 +31,7 @@ module.exports = [
     path: '/cards',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['ADMIN'],
       },
       handler: all,

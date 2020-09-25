@@ -12,6 +12,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+DROP VIEW user_groups_v;
 DROP TABLE users CASCADE;
 DROP TABLE payment_methods CASCADE;
 DROP TABLE time_token CASCADE;

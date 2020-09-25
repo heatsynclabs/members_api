@@ -13,14 +13,39 @@
 // limitations under the License.
 
 const env = process.env.NODE_ENV || 'development';
-const port = process.env.NODE_PORT || 3004;
+const port = process.env.NODE_PORT || process.env.PORT || 3004;
 const Pack = require('./package');
 const knexFile = require('./knexfile');
+const { forEach, startsWith, lowerCase } = require('lodash');
 
 const jwt = {
   password: process.env.JWT_KEY,
   signOptions: {},
 };
+
+const cookies = {
+  password: process.env.JWT_PASSWORD || 'y7Nw7YMkgdJZww3RqtopYSpfnNqNfbMa',
+  name: process.env.COOKIE_NAME || 'hsl3529673456',
+  isSecure: false,
+  path: '/',
+};
+
+const oauth = {};
+forEach(process.env, (v, k) => {
+  if(startsWith(k, 'CLIENT_ID_') && v) {
+    let brand = lowerCase(k.substring(10));
+    if(!oauth[brand]) {
+      oauth[brand] = {type: brand, options: {}};
+    }
+    oauth[brand].client_id = v;
+  } else if(startsWith(k, 'CLIENT_SECRET_') && v) {
+    let brand = lowerCase(k.substring(14));
+    if(!oauth[brand]) {
+      oauth[brand] = {type: brand, options: {}};
+    }
+    oauth[brand].client_secret = v;
+  }
+});
 
 const connectionOptions = {
   test: {
@@ -93,11 +118,16 @@ const cache = {
 module.exports = {
   env,
   knex: knexFile,
+  siteName: process.env.SITE_NAME || 'HeatSync Labs',
   connection: connectionOptions[env],
-  jwt: jwt,
+  jwt,
+  cookies,
+  oauth,
   cache: cache[env],
-  admin_email: process.env.ADMIN_EMAIL || 'admin@iceddev.com',
+  admin_email: process.env.ADMIN_EMAIL || 'info@heatsynclabs.org',
   domain: process.env.DOMAIN_LOCATION || 'http://localhost:3005',
+  domain_dev: process.env.DOMAIN_LOCATION_DEV || 'http://localhost:3005',
+  server_url: process.env.SERVER_URL || `http://localhost:${port}`,
   swaggerOptions: {
     info: {
       title: Pack.name,
@@ -123,7 +153,7 @@ module.exports = {
   },
   sendgrid: {
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-    disable_sending: (env != "production")
+    // disable_sending: (env != "production")
   },
   server: {},
   version: Pack.version
