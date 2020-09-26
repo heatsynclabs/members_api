@@ -55,7 +55,7 @@ module.exports = [
       notes: 'Query for events',
       tags: ['api', 'events'],
       validate: {
-        query: omit(event, ['password']),
+        query: Joi.object(omit(event, ['password'])),
       },
     },
   },
@@ -72,9 +72,9 @@ module.exports = [
       notes: 'Returns back the specified event object',
       tags: ['api'], // ADD THIS TAG
       validate: {
-        params: {
+        params: Joi.object({
           event_id: Joi.string().uuid().required(),
-        },
+        }),
       },
     },
   },
@@ -91,9 +91,9 @@ module.exports = [
       notes: 'Deletes an Event',
       tags: ['api'], // ADD THIS TAG
       validate: {
-        params: {
+        params: Joi.object({
           event_id: Joi.string().uuid().required(),
-        },
+        }),
       },
     },
   },
@@ -107,7 +107,7 @@ module.exports = [
       notes: 'Adds an Event',
       tags: ['api', 'events'],
       validate: {
-        payload: omit(required, ['id']),
+        payload: Joi.object(omit(required, ['id'])),
       },
     },
   },
@@ -121,9 +121,9 @@ module.exports = [
       notes: 'Edit an Event',
       tags: ['api', 'events'],
       validate: {
-        params: {
+        params: Joi.object({
           event_id: Joi.string().uuid().required(),
-        },
+        }),
       },
     },
   },
