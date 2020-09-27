@@ -19,14 +19,14 @@ const instructorModel = require('../models/instructors');
 
 const instructorOrAdmin = async (req) => {
   const cert_id = req.params.id || req.payload.cert_id;
-  if(isAdmin(req)) {
+  if (isAdmin(req)) {
     return true;
   }
-  
+
   const creds = getCreds(req);
-  const instructors = await instructorModel.browse({user_id: creds.id, cert_id});
+  const instructors = await instructorModel.browse({ user_id: creds.id, cert_id });
   return !!instructors.length;
-}
+};
 
 const routes = breadRoutes({
   model,

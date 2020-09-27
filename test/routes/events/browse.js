@@ -22,13 +22,11 @@ const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client
 const { users, events } = require('../../fixtures');
 
 lab.experiment('GET /events/', () => {
-  let event;
   let Authorization;
   let data;
 
   lab.before(async () => {
     data = await fixtures.create({ users, events });
-    event = data.events[0];
     const authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
@@ -47,7 +45,6 @@ lab.experiment('GET /events/', () => {
     };
 
     server.inject(options, (res) => {
-      console.log('res', res);
       expect(res.statusCode).to.equal(200);
       expect(res.result).to.be.an.array();
       expect(res.result[0].name).to.equal('foo');
@@ -109,5 +106,4 @@ lab.experiment('GET /events/', () => {
       done();
     });
   });
-
 });

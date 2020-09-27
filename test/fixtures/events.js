@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const faker = require('faker');
 const { Factory } = require('rosie');
 
 const event = new Factory();

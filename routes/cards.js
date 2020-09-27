@@ -15,6 +15,6 @@
 const breadRoutes = require('../lib/breadRoutes');
 const model = require('../models/cards');
 
-const routes = breadRoutes({model});
+const routes = breadRoutes({ model });
 
 module.exports = routes;

@@ -32,7 +32,7 @@ lab.experiment('POST /events', () => {
   });
 
   lab.after(() => {
-    return destroyRecords({ users })
+    return destroyRecords({ users });
   });
 
   lab.test('should create an event', async () => {
@@ -43,7 +43,7 @@ lab.experiment('POST /events', () => {
       // end_date: '2019-10-11 15:00:00',
       frequency: 'weekly',
       location: 'HeatSync Labs',
-    }
+    };
 
     const options = {
       url: url.format('/events'),

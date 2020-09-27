@@ -15,6 +15,6 @@
 const breadRoutes = require('../lib/breadRoutes');
 const model = require('../models/memberships');
 
-const routes = breadRoutes({model});
+const routes = breadRoutes({ model });
 
 module.exports = routes;

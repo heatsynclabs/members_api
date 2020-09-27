@@ -32,7 +32,7 @@ const user = {
   email: Joi.string().email().required(),
   password: Joi.string().regex(/^[a-zA-Z0-9]{6,1000}$/),
   name: Joi.string().max(255),
-  phone:  Joi.string().max(20),
+  phone: Joi.string().max(20),
   current_skills: Joi.string().max(1000),
   desired_skills: Joi.string().max(1000),
   waiver: Joi.date(),
@@ -64,7 +64,7 @@ module.exports = [
       },
       handler: (req) => {
         // console.log('me', req.auth);
-        if(Array.isArray(req.auth.credentials)) {
+        if (Array.isArray(req.auth.credentials)) {
           return pick(req.auth.credentials[0], ['email', 'scope', 'id', 'name']);
         }
         return pick(req.auth.credentials, ['email', 'scope', 'id', 'name']);

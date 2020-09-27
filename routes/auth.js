@@ -15,7 +15,14 @@
 const Joi = require('joi');
 const { omit } = require('lodash');
 
-const { login, oauthStart, oauthCallback, oauthTokenLogin, emailLogin, emailSignupVerify } = require('../lib/users');
+const {
+  login,
+  oauthStart,
+  oauthCallback,
+  oauthTokenLogin,
+  emailLogin,
+  emailSignupVerify
+} = require('../lib/users');
 
 const auth = [
   {
@@ -41,8 +48,14 @@ const auth = [
     handler: async (req, h) => {
       const result = await oauthStart(req.query.mode);
       if (result.rfp) {
-        // console.log('setting cookie', result.rfp)
-        h.response(result).state('r', result.rfp, { encoding: 'none', strictHeader: false, isSameSite: false, isSecure: false, isHttpOnly: true, path: '/',  });
+        h.response(result).state('r', result.rfp, {
+          encoding: 'none',
+          strictHeader: false,
+          isSameSite: false,
+          isSecure: false,
+          isHttpOnly: true,
+          path: '/'
+        });
       }
       return omit(result, ['rfp']);
     },
@@ -79,10 +92,8 @@ const auth = [
   {
     method: 'POST',
     path: '/users/oauth_token',
-    handler: async (req, h) => {
-      console.log('oauth', req.payload);
-      const {token, user} = await oauthTokenLogin(req.payload.token);
-      console.log('setting cookieauth', user, token);
+    handler: async (req) => {
+      const { token, user } = await oauthTokenLogin(req.payload.token);
       req.cookieAuth.set(omit(token, 'token'));
       user.token = token.token;
       return user;
@@ -102,8 +113,7 @@ const auth = [
   {
     method: 'POST',
     path: '/users/email_login',
-    handler: async (req, h) => {
-      console.log('email_login', req.payload);
+    handler: async (req) => {
       return emailLogin(req.payload.email);
     },
     config: {
@@ -122,9 +132,8 @@ const auth = [
     method: 'GET',
     path: '/users/email_token/{token}',
     handler: async (req, h) => {
-      console.log('email_login', req.params);
       const url = await emailSignupVerify(req.params.token);
-      return h.redirect(url); 
+      return h.redirect(url);
     },
     config: {
       auth: false,
@@ -141,9 +150,9 @@ const auth = [
   {
     method: 'GET',
     path: '/users/logout',
-    handler: async (req, h) => {
-      req.cookieAuth.clear()
-      return 'ok'
+    handler: async (req) => {
+      req.cookieAuth.clear();
+      return 'ok';
     },
     config: {
       auth: false,

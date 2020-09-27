@@ -39,7 +39,7 @@ lab.experiment('PATCH /events/', () => {
   });
 
   lab.test('should successfully edit an event', async () => {
-    sampleEvent['name'] = 'fookie';
+    sampleEvent.name = 'fookie';
     const options = {
       url: url.format(`/events/${sampleEvent.id}`),
       method: 'PATCH',

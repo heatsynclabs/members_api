@@ -76,9 +76,9 @@ module.exports = [
   {
     method: 'POST',
     path: '/events',
-    handler: req => {
+    handler: (req) => {
       req.payload.created_by = getCreds(req).id;
-      return model.add(req.payload)
+      return model.add(req.payload);
     },
     config: {
       auth: {

@@ -15,6 +15,6 @@
 const breadRoutes = require('../lib/breadRoutes');
 const model = require('../models/instructors');
 
-const routes = breadRoutes({model, scopes: { browse: ['USER'], default: ['ADMIN'] }});
+const routes = breadRoutes({ model, scopes: { browse: ['USER'], default: ['ADMIN'] } });
 
 module.exports = routes;
