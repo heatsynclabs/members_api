@@ -21,6 +21,7 @@ const stats = require('./stats');
 const events = require('./events');
 const memberships = require('./memberships');
 const instructors = require('./instructors');
+const userCerts = require('./user_certs');
 
 
 // Routes - Exports a default for routes to be used in index.js
@@ -34,4 +35,5 @@ module.exports = [].concat(
   events,
   memberships,
   instructors,
+  userCerts,
 );
