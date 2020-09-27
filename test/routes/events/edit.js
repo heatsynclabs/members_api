@@ -24,16 +24,17 @@ const { users, events } = require('../../fixtures');
 lab.experiment('PATCH /events/', () => {
   let sampleEvent;
   let Authorization;
+  let data;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users, events });
+    data = await fixtures.create({ users, events });
     sampleEvent = data.events[0];
     const authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users, events });
+    return destroyRecords(data);
   });
 
   lab.test('should successfully edit an event', async () => {

@@ -24,20 +24,20 @@ const { users, events } = require('../../fixtures');
 lab.experiment('GET /events/', () => {
   let event;
   let Authorization;
+  let data;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users, events });
+    data = await fixtures.create({ users, events });
     event = data.events[0];
     const authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users, events });
+    return destroyRecords(data);
   });
 
   lab.test('should retrieve event information when logged in', (done) => {
-    console.log('boo');
     const options = {
       url: url.format({
         pathname: '/events',
@@ -46,7 +46,6 @@ lab.experiment('GET /events/', () => {
       headers: { Authorization },
     };
 
-    console.log('hi');
     server.inject(options, (res) => {
       console.log('res', res);
       expect(res.statusCode).to.equal(200);
@@ -57,7 +56,7 @@ lab.experiment('GET /events/', () => {
     });
   });
 
-  lab.test.skip('should error with invalid query', (done) => {
+  lab.test('should error with invalid query', (done) => {
     const options = {
       url: url.format({
         pathname: '/events/',

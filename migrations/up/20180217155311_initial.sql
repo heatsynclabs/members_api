@@ -73,7 +73,6 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMPTZ,
   deleted_at TIMESTAMPTZ
 );
-
 CREATE TRIGGER updated_at_trigger BEFORE UPDATE
 ON users FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
@@ -84,13 +83,20 @@ CREATE TABLE IF NOT EXISTS groups (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ
 );
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON groups FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
 
 CREATE TABLE IF NOT EXISTS memberships (
   user_id UUID REFERENCES users(id) NOT NULL,
   group_id TEXT REFERENCES groups(id) NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ,
   PRIMARY KEY(user_id, group_id)
 );
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON memberships FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
 
 CREATE TABLE IF NOT EXISTS time_token (
   id UUID NOT NULL DEFAULT uuid_generate_v4(),
@@ -108,9 +114,12 @@ CREATE TABLE IF NOT EXISTS certifications (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ
 );
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON certifications FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
 
 CREATE TABLE IF NOT EXISTS user_certifications (
-  user_id UUID REFERENCES users(id) NOT NULL,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   cert_id INTEGER REFERENCES certifications(id) NOT NULL,
   note TEXT,
   created_by UUID REFERENCES users(id),
@@ -118,12 +127,15 @@ CREATE TABLE IF NOT EXISTS user_certifications (
   updated_at TIMESTAMPTZ,
   PRIMARY KEY(user_id, cert_id)
 );
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON user_certifications FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
 
 CREATE TABLE IF NOT EXISTS contracts (
   id SERIAL PRIMARY KEY NOT NULL,
   first_name TEXT,
   last_name TEXT,
-  user_id UUID REFERENCES users(id),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   document_file_name TEXT,
   cosigner TEXT,
   signed_at TIMESTAMP,
@@ -131,20 +143,26 @@ CREATE TABLE IF NOT EXISTS contracts (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ
 );
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON contracts FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
 
 CREATE TABLE IF NOT EXISTS cards (
   id SERIAL PRIMARY KEY NOT NULL,
-  user_id UUID REFERENCES users(id) NOT NULL,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   card_number TEXT,
   permissions INTEGER,
   note TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ
 );
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON cards FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
 
 CREATE TABLE IF NOT EXISTS payments (
   id SERIAL PRIMARY KEY NOT NULL,
-  user_id UUID REFERENCES users(id) NOT NULL,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   amount INTEGER,
   payment_date DATE,
   note TEXT,
@@ -152,6 +170,9 @@ CREATE TABLE IF NOT EXISTS payments (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ
 );
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON payments FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
 
 CREATE TABLE IF NOT EXISTS events (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -162,14 +183,15 @@ CREATE TABLE IF NOT EXISTS events (
   frequency TEXT,
   location TEXT,
   is_deleted BOOLEAN DEFAULT false,
+  created_by UUID REFERENCES users(id) ON DELETE CASCADE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ,
   deleted_at TIMESTAMPTZ
 );
-
 CREATE TRIGGER updated_at_trigger BEFORE UPDATE
 ON events FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
+
 CREATE OR REPLACE VIEW user_groups_v AS
 SELECT
   u.*,
@@ -184,7 +206,7 @@ FROM
   users AS u;
 
 -- seed data
-INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);
+INSERT INTO users (id, password,email,name,is_validated,member_level) VALUES ('badaf5f6-cdc8-4be7-af46-c5f78e748a55', crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'gobie@example.com','Gobie McDaniels',true,5);
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'jimbo@example.com','Jimbo Fargo',false,1);
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'hardy@example.com','Hardy Bridle',true,10);
@@ -205,4 +227,4 @@ INSERT INTO certifications (id, name, description, created_at, updated_at) VALUE
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(10, 'Plasma Cutter', 'Hobart 500534R 250ci Reconditioned A-Stock AirForce', '2014-04-11 02:08:58.334201', '2014-04-11 02:08:58.334201');
 ALTER SEQUENCE certifications_id_seq RESTART WITH 11;
 
-INSERT INTO events (id,name, description, start_date, end_date, frequency, location) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a6a','Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs');
+INSERT INTO events (id,name, description, start_date, end_date, frequency, location, created_by) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a6a','Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs', 'badaf5f6-cdc8-4be7-af46-c5f78e748a55');

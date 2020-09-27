@@ -12,49 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const Joi = require('joi');
-const { omit } = require('lodash');
+const breadRoutes = require('../lib/breadRoutes');
+const model = require('../models/certs');
 
-const {
-  add,
-  browse
-} = require('../lib/certs');
-const { resetRequest, resetPassword } = require('../lib/reset');
+const routes = breadRoutes({model, scopes: { browse: ['USER'], default: ['ADMIN'] }});
 
-const cert = {
-  id: Joi.number(),
-  name: Joi.string().max(255).required(),
-  description: Joi.string().max(1000)
-};
-
-module.exports = [
-  {
-    method: 'GET',
-    path: '/certs',
-    config: {
-      auth: {
-        strategies: ['auth', 'jwt'],
-        scope: ['USER'],
-      },
-      handler: browse,
-      description: 'list certifications',
-      tags: ['api', 'certs'], // ADD THIS TAG
-    },
-  },
-  {
-    method: 'POST',
-    path: '/certs',
-    handler: req => add(req.payload),
-    config: {
-      auth: {
-        strategies: ['auth', 'jwt'],
-        scope: ['ADMIN'],
-      },
-      description: 'Add A Certification',
-      tags: ['api', 'certs'],
-      validate: {
-        payload: Joi.object(omit(cert, ['id'])),
-      },
-    },
-  }
-];
+module.exports = routes;

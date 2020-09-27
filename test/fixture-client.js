@@ -30,6 +30,7 @@ const fixtures = new Fixtures(fixturesConfig);
 
 const deleteOrder = [
   'time_token',
+  'events',
   'users',
 ];
 

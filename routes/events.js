@@ -22,7 +22,6 @@ const {
   del,
   byIdCached
 } = require('../lib/events');
-const { resetRequest, resetPassword } = require('../lib/reset');
 
 const event = {
   id: Joi.number(),

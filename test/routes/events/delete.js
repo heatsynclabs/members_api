@@ -24,16 +24,17 @@ const { users, events } = require('../../fixtures');
 lab.experiment('DELETE /events/', () => {
   let sampleEvent;
   let Authorization;
+  let data;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users, events });
+    data = await fixtures.create({ users, events });
     sampleEvent = data.events[0];
     const authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users, events }); // or try only events
+    return destroyRecords(data); // or try only events
   });
 
   lab.test('should successfully delete an event', async () => {

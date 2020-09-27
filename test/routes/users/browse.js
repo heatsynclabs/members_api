@@ -56,7 +56,7 @@ lab.experiment('GET /users/', () => {
     });
   });
 
-  lab.test.skip('should error with invalid query', (done) => {
+  lab.test('should error with invalid query', (done) => {
     const options = {
       url: url.format({
         pathname: '/users/',
