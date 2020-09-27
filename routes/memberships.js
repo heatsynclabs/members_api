@@ -12,26 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const health = require('./health');
-const users = require('./users');
-const auth = require('./auth');
-const certs = require('./certs');
-const cards = require('./cards');
-const stats = require('./stats');
-const events = require('./events');
-const memberships = require('./memberships');
-const instructors = require('./instructors');
+const breadRoutes = require('../lib/breadRoutes');
+const model = require('../models/memberships');
 
+const routes = breadRoutes({model});
 
-// Routes - Exports a default for routes to be used in index.js
-module.exports = [].concat(
-  auth,
-  health,
-  users,
-  certs,
-  cards,
-  stats,
-  events,
-  memberships,
-  instructors,
-);
+module.exports = routes;

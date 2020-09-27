@@ -12,7 +12,12 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+DROP VIEW instructors_v;
+DROP VIEW memberships_v;
+DROP VIEW user_certifications_v;
+DROP VIEW user_cards_v;
 DROP VIEW user_groups_v;
+DROP TABLE instructors CASCADE;
 DROP TABLE users CASCADE;
 DROP TABLE payment_methods CASCADE;
 DROP TABLE time_token CASCADE;

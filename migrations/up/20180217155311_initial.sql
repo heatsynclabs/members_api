@@ -4,7 +4,7 @@
 -- you may not use this file except in compliance with the License.
 -- You may obtain a copy of the License at
 --
---     http://www.apache.org/licenses/LICENSE-2.0
+--     http://www.apache.org/licenses/LICENSE-2.0 
 --
 -- Unless required by applicable law or agreed to in writing, software
 -- distributed under the License is distributed on an "AS IS" BASIS,
@@ -88,11 +88,12 @@ ON groups FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
 
 CREATE TABLE IF NOT EXISTS memberships (
+  id SERIAL PRIMARY KEY NOT NULL,
   user_id UUID REFERENCES users(id) NOT NULL,
   group_id TEXT REFERENCES groups(id) NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ,
-  PRIMARY KEY(user_id, group_id)
+  UNIQUE(user_id, group_id)
 );
 CREATE TRIGGER updated_at_trigger BEFORE UPDATE
 ON memberships FOR EACH ROW EXECUTE PROCEDURE
@@ -119,16 +120,29 @@ ON certifications FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
 
 CREATE TABLE IF NOT EXISTS user_certifications (
+  id SERIAL PRIMARY KEY NOT NULL,
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
   cert_id INTEGER REFERENCES certifications(id) NOT NULL,
   note TEXT,
   created_by UUID REFERENCES users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ,
-  PRIMARY KEY(user_id, cert_id)
+  UNIQUE (user_id, cert_id)
 );
 CREATE TRIGGER updated_at_trigger BEFORE UPDATE
 ON user_certifications FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
+
+CREATE TABLE IF NOT EXISTS instructors (
+  id SERIAL PRIMARY KEY NOT NULL,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  cert_id INTEGER REFERENCES certifications(id) NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ,
+  UNIQUE (user_id, cert_id)
+);
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON instructors FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
 
 CREATE TABLE IF NOT EXISTS contracts (
@@ -205,6 +219,59 @@ SELECT
 FROM
   users AS u;
 
+CREATE OR REPLACE VIEW user_cards_v AS
+SELECT
+  c.*,
+  u.name,
+  u.email,
+  u.last_login
+FROM
+  users AS u,
+  cards AS c
+WHERE
+  u.id = c.user_id;
+
+CREATE OR REPLACE VIEW user_certifications_v AS
+SELECT
+  uc.*,
+  u.name AS user_name,
+  c.name AS cert_name,
+  u.last_login
+FROM
+  users AS u,
+  certifications AS c,
+  user_certifications AS uc
+WHERE
+  u.id = uc.user_id
+  AND uc.cert_id = c.id;
+
+CREATE OR REPLACE VIEW memberships_v AS
+SELECT
+  m.*,
+  u.name AS user_name,
+  u.email,
+  u.last_login
+FROM
+  users AS u,
+  memberships AS m
+WHERE
+  u.id = m.user_id;
+
+CREATE OR REPLACE VIEW instructors_v AS
+SELECT
+  i.*,
+  u.name AS user_name,
+  c.name AS cert_name,
+  u.last_login
+FROM
+  users AS u,
+  certifications AS c,
+  instructors AS i
+WHERE
+  u.id = i.user_id
+  AND i.cert_id = c.id;
+
+
 -- seed data
 INSERT INTO users (id, password,email,name,is_validated,member_level) VALUES ('badaf5f6-cdc8-4be7-af46-c5f78e748a55', crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);
 INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'gobie@example.com','Gobie McDaniels',true,5);
@@ -215,7 +282,7 @@ INSERT INTO payment_methods (id) VALUES ('CASH');
 INSERT INTO payment_methods (id) VALUES ('PAYPAL');
 INSERT INTO groups (id, description) VALUES ('ADMIN', 'Admin users');
 
-INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(1, 'Laser Cutter', 'Managed by Ryan McDermott', '2013-01-25 16:19:24.331172', '2014-02-23 06:08:12.476114');
+INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(1, 'Laser Cutter', 'Managed by Milton', '2013-01-25 16:19:24.331172', '2014-02-23 06:08:12.476114');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(2, 'Mill (CNC)', 'Prerequisite: Big Mill Managed by Oliver Fultz, Larry Campbell', '2013-01-25 16:19:44.716051', '2014-03-12 15:15:20.386834');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(3, 'Mill (Big)', 'Managed by Jasper Nance or Will Bradley', '2013-01-25 16:19:57.269947', '2014-02-23 06:08:31.062376');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(4, 'Mill (Mini)', 'Managed by Jasper Nance or Will Bradley', '2013-01-25 16:20:04.541371', '2014-02-23 06:08:36.587248');
@@ -225,6 +292,7 @@ INSERT INTO certifications (id, name, description, created_at, updated_at) VALUE
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(8, 'Welder (TIG)', 'Prerequisite: MIG Welder Managed by Austin Kipp', '2013-01-25 16:20:53.220831', '2014-02-23 06:08:46.477245');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(9, 'Table Saw', 'table saw', '2014-02-07 21:30:18.813289', '2014-02-23 06:08:39.593008');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(10, 'Plasma Cutter', 'Hobart 500534R 250ci Reconditioned A-Stock AirForce', '2014-04-11 02:08:58.334201', '2014-04-11 02:08:58.334201');
-ALTER SEQUENCE certifications_id_seq RESTART WITH 11;
+INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(12, 'Laser Cutter (small)', 'Managed by Milton', '2013-01-25 16:19:24.331172', '2014-02-23 06:08:12.476114');
+ALTER SEQUENCE certifications_id_seq RESTART WITH 12;
 
 INSERT INTO events (id,name, description, start_date, end_date, frequency, location, created_by) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a6a','Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs', 'badaf5f6-cdc8-4be7-af46-c5f78e748a55');
