@@ -51,7 +51,7 @@ module.exports = function handleErrors(request, h) {
           return boom.badData();
         }
         if (request.response.code === '20000') {
-          return  boom.notFound();
+          return boom.notFound();
         }
         return h.continue;
     }

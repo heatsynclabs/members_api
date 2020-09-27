@@ -32,16 +32,16 @@ const cookies = {
 
 const oauth = {};
 forEach(process.env, (v, k) => {
-  if(startsWith(k, 'CLIENT_ID_') && v) {
-    let brand = lowerCase(k.substring(10));
-    if(!oauth[brand]) {
-      oauth[brand] = {type: brand, options: {}};
+  if (startsWith(k, 'CLIENT_ID_') && v) {
+    const brand = lowerCase(k.substring(10));
+    if (!oauth[brand]) {
+      oauth[brand] = { type: brand, options: {} };
     }
     oauth[brand].client_id = v;
-  } else if(startsWith(k, 'CLIENT_SECRET_') && v) {
-    let brand = lowerCase(k.substring(14));
-    if(!oauth[brand]) {
-      oauth[brand] = {type: brand, options: {}};
+  } else if (startsWith(k, 'CLIENT_SECRET_') && v) {
+    const brand = lowerCase(k.substring(14));
+    if (!oauth[brand]) {
+      oauth[brand] = { type: brand, options: {} };
     }
     oauth[brand].client_secret = v;
   }
@@ -50,7 +50,7 @@ forEach(process.env, (v, k) => {
 const connectionOptions = {
   test: {
     host: '0.0.0.0',
-    port: port,
+    port,
     routes: {
       // validate: {
       //   failAction: async (request, h, err) => {
@@ -68,7 +68,7 @@ const connectionOptions = {
 
   development: {
     host: '0.0.0.0',
-    port: port,
+    port,
     routes: {
       // validate: {
       //   failAction: async (request, h, err) => {
@@ -85,7 +85,7 @@ const connectionOptions = {
   },
   production: {
     host: '0.0.0.0',
-    port: port,
+    port,
     routes: {
       cors: {
         credentials: true,

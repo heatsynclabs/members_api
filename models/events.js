@@ -3,8 +3,9 @@ const breadModel = require('../lib/breadModel');
 
 const model = breadModel({
   name: 'events',
+  softDelete: true,
   schema: {
-    id: Joi.number().integer().required(),
+    id: Joi.string().uuid().required(),
     name: Joi.string(),
     description: Joi.string(),
     start_date: Joi.date(),

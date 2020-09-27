@@ -15,17 +15,11 @@
 const { expect } = require('code');
 // eslint-disable-next-line
 const lab = exports.lab = require('lab').script();
-const sinon = require('sinon');
 const url = require('url');
-const { omit } = require('lodash');
 
-const bread = require('../../../lib/bread');
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users } = require('../../fixtures');
-
-// ADD auth
-console.log("NEEDS TEST AUTH");
 
 lab.experiment('POST /events', () => {
   let Authorization;

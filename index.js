@@ -24,8 +24,6 @@ const { validateJWT } = require('./lib/users');
 const handleRoles = require('./handleRoles');
 const handleErrors = require('./handleErrors');
 
-
-
 // Pull in routes config
 const Routes = require('./routes');
 
@@ -54,7 +52,7 @@ async function start() {
 
   server.auth.strategy('auth', 'cookie', {
     cookie: config.cookies,
-    validateFunc: async (request, session) => {
+    validateFunc: async () => {
       return { valid: true };
     }
   });

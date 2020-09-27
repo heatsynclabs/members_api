@@ -16,6 +16,7 @@ const { expect } = require('code');
 // eslint-disable-next-line
 const lab = exports.lab = require('lab').script();
 const url = require('url');
+const { omit } = require('lodash');
 
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
@@ -43,8 +44,9 @@ lab.experiment('PATCH /events/', () => {
       url: url.format(`/events/${sampleEvent.id}`),
       method: 'PATCH',
       headers: { Authorization },
-      payload: sampleEvent,
+      payload: omit(sampleEvent, ['id', 'created_by']),
     };
+
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
     expect(res.result.id).to.equal(sampleEvent.id);
