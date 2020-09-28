@@ -13,7 +13,6 @@ const model = breadModel({
     location: Joi.string(),
     frequency: Joi.string(),
     is_deleted: Joi.boolean(),
-    status: Joi.number(),
     created_by: Joi.string().uuid().required(),
   },
 });

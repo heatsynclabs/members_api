@@ -12,29 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const userBreadRoutes = require('../lib/userBreadRoutes');
 const breadRoutes = require('../lib/breadRoutes');
-const model = require('../models/user_certifications');
-const { getCreds, isAdmin } = require('../lib/util');
-const instructorModel = require('../models/instructors');
-
-const instructorOrAdmin = async (req) => {
-  const cert_id = req.params.id || req.payload.cert_id;
-  if (isAdmin(req)) {
-    return true;
-  }
-
-  const creds = getCreds(req);
-  const instructors = await instructorModel.browse({ user_id: creds.id, cert_id });
-  return !!instructors.length;
-};
-
-const userRoutes = userBreadRoutes({
-  model,
-  canAdd: instructorOrAdmin,
-  canEdit: instructorOrAdmin,
-  canDelete: instructorOrAdmin,
-});
+const userBreadRoutes = require('../lib/userBreadRoutes');
+const model = require('../models/notice_comments');
 
 const routes = breadRoutes({ model, scopes: { browse: ['USER'], default: ['ADMIN'] }, skip: ['read', 'add', 'edit', 'delete'] });
+const userRoutes = userBreadRoutes({ model });
+
 module.exports = routes.concat(userRoutes);

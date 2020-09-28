@@ -206,6 +206,46 @@ CREATE TRIGGER updated_at_trigger BEFORE UPDATE
 ON events FOR EACH ROW EXECUTE PROCEDURE
 updated_at();
 
+CREATE TABLE IF NOT EXISTS notices (
+  id SERIAL PRIMARY KEY NOT NULL,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  type TEXT,
+  subject TEXT,
+  comment TEXT,
+  status TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ
+);
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON notices FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
+CREATE INDEX notices_type_idx ON notices (type);
+CREATE INDEX notices_status_idx ON notices (status);
+
+CREATE TABLE IF NOT EXISTS notice_comments (
+  id SERIAL PRIMARY KEY NOT NULL,
+  notice_id INTEGER REFERENCES notices(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  comment TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ
+);
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON notice_comments FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
+
+CREATE TABLE IF NOT EXISTS notice_images (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  notice_id INTEGER REFERENCES notices(id),
+  user_id UUID REFERENCES users(id),
+  type TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ
+);
+CREATE TRIGGER updated_at_trigger BEFORE UPDATE
+ON notice_images FOR EACH ROW EXECUTE PROCEDURE
+updated_at();
+
 CREATE OR REPLACE VIEW user_groups_v AS
 SELECT
   u.*,
@@ -270,6 +310,38 @@ FROM
 WHERE
   u.id = i.user_id
   AND i.cert_id = c.id;
+
+CREATE OR REPLACE VIEW notices_v AS
+SELECT
+  n.*,
+  u.name AS user_name,
+  COALESCE(
+    (
+      SELECT json_agg(notice_images.id)
+      FROM notice_images
+      WHERE notice_id = n.id
+    ), '[]'::json
+  ) AS images
+FROM
+  users AS u,
+  notices AS n
+WHERE
+  u.id =  n.user_id;
+
+CREATE OR REPLACE VIEW notice_comments_v AS
+SELECT
+  nc.*,
+  u.name AS user_name,
+  n.subject,
+  n.status,
+  n.type
+FROM
+  users AS u,
+  notices AS n,
+  notice_comments AS nc
+WHERE
+  u.id = nc.user_id
+  AND n.id = nc.notice_id;
 
 
 -- seed data
