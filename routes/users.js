@@ -126,20 +126,20 @@ module.exports = [
       tags: ['api'], // ADD THIS TAG
     },
   },
-  {
-    method: 'GET',
-    path: '/users/all',
-    config: {
-      auth: {
-        strategies: ['auth', 'jwt'],
-        scope: ['USER'],
-      },
-      handler: all,
-      description: 'Gets all users',
-      notes: 'Returns back a list of users',
-      tags: ['api'], // ADD THIS TAG
-    },
-  },
+  // {
+  //   method: 'GET',
+  //   path: '/users/all',
+  //   config: {
+  //     auth: {
+  //       strategies: ['auth', 'jwt'],
+  //       scope: ['USER'],
+  //     },
+  //     handler: all,
+  //     description: 'Gets all users',
+  //     notes: 'Returns back a list of users',
+  //     tags: ['api'], // ADD THIS TAG
+  //   },
+  // },
   {
     method: 'GET',
     path: '/users/new_signups',

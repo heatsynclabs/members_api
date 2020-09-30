@@ -16,6 +16,7 @@ select
   u.id,
   u.name,
   u.email,
+  md5(lower(email)) gravatar,
   u.email_visible,
   u.phone,
   u.waiver,

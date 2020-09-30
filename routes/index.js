@@ -24,6 +24,7 @@ const instructors = require('./instructors');
 const userCerts = require('./user_certs');
 const notices = require('./notices');
 const noticeComments = require('./notice_comments');
+const allUsers = require('./all_users');
 
 
 // Routes - Exports a default for routes to be used in index.js
@@ -40,4 +41,5 @@ module.exports = [].concat(
   userCerts,
   notices,
   noticeComments,
+  allUsers,
 );

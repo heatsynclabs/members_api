@@ -259,6 +259,38 @@ SELECT
 FROM
   users AS u;
 
+CREATE OR REPLACE VIEW all_users_v AS
+SELECT
+  u.*,
+  md5(lower(u.email)) gravatar,
+  COALESCE(
+    (
+      SELECT json_agg((certs.id, certs.name))
+      FROM certifications certs, user_certifications ucerts
+      WHERE ucerts.user_id = u.id
+      AND certs.id = ucerts.cert_id
+    ), '[]'::json
+  ) AS user_certs,
+  COALESCE(
+    (
+      SELECT json_agg(cards.id)
+      FROM cards
+      WHERE cards.user_id = u.id
+    ), '[]'::json
+  ) AS user_cards,
+  COALESCE(
+    (
+      SELECT json_agg((certs2.id, certs2.name))
+      FROM certifications certs2, instructors
+      WHERE certs2.id = instructors.cert_id
+      AND u.id = instructors.user_id
+    ), '[]'::json
+  ) AS instructing
+FROM
+  users AS u
+WHERE
+  u.deleted_at is NULL;
+
 CREATE OR REPLACE VIEW user_cards_v AS
 SELECT
   c.*,

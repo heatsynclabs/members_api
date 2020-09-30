@@ -12,6 +12,7 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
+DROP VIEW all_users_v;
 DROP VIEW notice_comments_v;
 DROP VIEW notices_v;
 DROP VIEW instructors_v;
