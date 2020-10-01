@@ -265,7 +265,7 @@ SELECT
   md5(lower(u.email)) gravatar,
   COALESCE(
     (
-      SELECT json_agg((certs.id, certs.name))
+      SELECT json_agg((certs.id, certs.name, certs.created_at))
       FROM certifications certs, user_certifications ucerts
       WHERE ucerts.user_id = u.id
       AND certs.id = ucerts.cert_id
