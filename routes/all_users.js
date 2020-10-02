@@ -19,8 +19,9 @@ const boom = require('boom');
 const Joi = require('joi');
 
 const strategies = ['auth', 'jwt'];
-const omitFields = ['payment_method_id', 'payment_account', 'password']
-const routes = [{
+const omitFields = ['payment_method_id', 'payment_account', 'password'];
+const routes = [
+  {
     method: 'GET',
     path: '/users/all',
     handler: async (req) => {
@@ -41,8 +42,8 @@ const routes = [{
         strategies,
         scope: ['USER'],
       },
-      description: `Browse for user`,
-      notes: `Browse for user`,
+      description: 'Browse for user',
+      notes: 'Browse for user',
       tags: ['api', 'users'],
       validate: {
         query: Joi.object(model.getFullQuerySchema())
@@ -72,8 +73,8 @@ const routes = [{
         }
         return omit(row, omitFields.concat(['email']));
       },
-      description: `Reads a user record by Id`,
-      notes: `Reads a user record by Id`,
+      description: 'Reads a user record by Id',
+      notes: 'Reads a user record by Id',
       tags: ['api', 'users'],
       validate: {
         params: Joi.object({

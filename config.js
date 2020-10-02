@@ -26,7 +26,7 @@ const jwt = {
 const cookies = {
   password: process.env.JWT_PASSWORD || 'y7Nw7YMkgdJZww3RqtopYSpfnNqNfbMa',
   name: process.env.COOKIE_NAME || 'hsl3529673456',
-  isSecure: process.env.DEV_COOKIES ? false : true,
+  isSecure: !process.env.DEV_COOKIES,
   path: '/',
   isSameSite: process.env.DEV_SAME_SITE ? 'Lax' : 'None',
 };

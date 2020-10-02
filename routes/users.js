@@ -22,7 +22,6 @@ const {
   validate,
   byIdCached,
   del,
-  all,
   newUsersCached
 } = require('../lib/users');
 const { resetRequest, resetPassword } = require('../lib/reset');
