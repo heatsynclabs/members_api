@@ -52,7 +52,7 @@ const auth = [
           encoding: 'none',
           strictHeader: false,
           isSameSite: false,
-          isSecure: false,
+          isSecure: true,
           isHttpOnly: true,
           path: '/'
         });
