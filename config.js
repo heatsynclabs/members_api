@@ -28,6 +28,7 @@ const cookies = {
   name: process.env.COOKIE_NAME || 'hsl3529673456',
   isSecure: process.env.DEV_COOKIES ? false : true,
   path: '/',
+  isSameSite: process.env.DEV_SAME_SITE ? 'Lax' : 'None',
 };
 
 const oauth = {};
