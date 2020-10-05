@@ -12,19 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const fs = require('fs');
-const path = require('path');
+const { getCounts } = require('../lib/postal_codes');
 
-function getContent(name) {
-  return fs.readFileSync(path.join(__dirname, `./${name}.sql`), 'utf8');
-}
-
-module.exports = {
-  validationRequest: getContent('validationRequest'),
-  authRequest: getContent('authRequest'),
-  allUsers: getContent('allUsers'),
-  allCards: getContent('allCards'),
-  newUsers: getContent('newUsers'),
-  stats: getContent('stats'),
-  postalCounts: getContent('postalCounts'),
-};
+module.exports = [
+  {
+    method: 'GET',
+    path: '/postal_counts',
+    config: {
+      handler: getCounts,
+      description: 'list stats',
+      tags: ['api', 'stats'], // ADD THIS TAG
+    },
+  }
+];
