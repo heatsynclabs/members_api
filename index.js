@@ -12,18 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const Hapi = require('hapi');
-const Vision = require('vision');
-const Inert = require('inert');
+const Hapi = require('@hapi/hapi');
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
 const JWTAuth = require('hapi-auth-jwt2');
 const HapiSwagger = require('hapi-swagger');
+const CookieAuth = require('@hapi/cookie');
 const debug = require('debug')('errors');
 const config = require('./config');
 const { validateJWT } = require('./lib/users');
 const handleRoles = require('./handleRoles');
 const handleErrors = require('./handleErrors');
-
-
 
 // Pull in routes config
 const Routes = require('./routes');
@@ -36,6 +35,7 @@ async function start() {
   // register hapi-now-auth plugin
   try {
     await server.register([
+      CookieAuth,
       JWTAuth,
       Inert,
       Vision,
@@ -50,6 +50,12 @@ async function start() {
     process.exit(1);
   }
 
+  server.auth.strategy('auth', 'cookie', {
+    cookie: config.cookies,
+    validateFunc: async () => {
+      return { valid: true };
+    }
+  });
   server.auth.strategy('jwt', 'jwt', {
     verifyOptions: { algorithms: ['HS256'] },
     key: config.jwt.password,

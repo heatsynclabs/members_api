@@ -19,6 +19,13 @@ const certs = require('./certs');
 const cards = require('./cards');
 const stats = require('./stats');
 const events = require('./events');
+const memberships = require('./memberships');
+const instructors = require('./instructors');
+const userCerts = require('./user_certs');
+const notices = require('./notices');
+const noticeComments = require('./notice_comments');
+const allUsers = require('./all_users');
+const postalCodes = require('./postal_codes');
 
 
 // Routes - Exports a default for routes to be used in index.js
@@ -29,5 +36,12 @@ module.exports = [].concat(
   certs,
   cards,
   stats,
-  events
+  events,
+  memberships,
+  instructors,
+  userCerts,
+  notices,
+  noticeComments,
+  allUsers,
+  postalCodes,
 );

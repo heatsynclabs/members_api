@@ -20,8 +20,7 @@ module.exports = [
     path: '/stats',
     config: {
       auth: {
-        strategy: 'jwt',
-        scope: ['USER'],
+        strategies: ['auth', 'jwt'],
       },
       handler: generalCached,
       description: 'list stats',

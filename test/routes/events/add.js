@@ -15,19 +15,24 @@
 const { expect } = require('code');
 // eslint-disable-next-line
 const lab = exports.lab = require('lab').script();
-const sinon = require('sinon');
 const url = require('url');
-const { omit } = require('lodash');
 
-const bread = require('../../../lib/bread');
 const server = require('../../../');
-const { destroyRecords, destroyTokens, fixtures } = require('../../fixture-client');
-const { events } = require('../../fixtures');
-const { databaseError } = require('../../../lib/errors');
+const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { users } = require('../../fixtures');
 
 lab.experiment('POST /events', () => {
+  let Authorization;
+  let data;
+
+  lab.before(async () => {
+    data = await fixtures.create({ users });
+    const authRes = await getAuthToken(data.users[0]);
+    Authorization = authRes.token;
+  });
+
   lab.after(() => {
-    return destroyRecords({ events })
+    return destroyRecords({ users });
   });
 
   lab.test('should create an event', async () => {
@@ -38,18 +43,16 @@ lab.experiment('POST /events', () => {
       // end_date: '2019-10-11 15:00:00',
       frequency: 'weekly',
       location: 'HeatSync Labs',
-    }
+    };
 
     const options = {
       url: url.format('/events'),
       method: 'POST',
       payload: e,
+      headers: { Authorization },
     };
 
     const res = await server.inject(options);
-    if(res.result && res.result.id) { // sometimes we don't get a result (i.e. 500)
-      tokens.push(res.result.id);
-    }
     expect(res.statusCode).to.equal(200);
     expect(res.result).to.be.an.object();
     expect(res.result).to.include('id');

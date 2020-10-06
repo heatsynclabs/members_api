@@ -16,6 +16,7 @@ const { expect } = require('code');
 // eslint-disable-next-line
 const lab = exports.lab = require('lab').script();
 const url = require('url');
+const { omit } = require('lodash');
 
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
@@ -24,26 +25,28 @@ const { users, events } = require('../../fixtures');
 lab.experiment('PATCH /events/', () => {
   let sampleEvent;
   let Authorization;
+  let data;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users, events });
+    data = await fixtures.create({ users, events });
     sampleEvent = data.events[0];
     const authRes = await getAuthToken(data.users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users, events });
+    return destroyRecords(data);
   });
 
   lab.test('should successfully edit an event', async () => {
-    sampleEvent['name'] = 'fookie';
+    sampleEvent.name = 'fookie';
     const options = {
       url: url.format(`/events/${sampleEvent.id}`),
       method: 'PATCH',
       headers: { Authorization },
-      payload: sampleEvent,
+      payload: omit(sampleEvent, ['id', 'created_by']),
     };
+
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
     expect(res.result.id).to.equal(sampleEvent.id);

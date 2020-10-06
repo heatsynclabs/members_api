@@ -21,9 +21,8 @@ const { omit } = require('lodash');
 
 const bread = require('../../../lib/bread');
 const server = require('../../../');
-const { destroyRecords, destroyTokens, fixtures } = require('../../fixture-client');
+const { destroyRecords, destroyTokens } = require('../../fixture-client');
 const { users } = require('../../fixtures');
-const { databaseError } = require('../../../lib/errors');
 
 lab.experiment('POST /user', () => {
   // eslint-disable-next-line
@@ -43,7 +42,7 @@ lab.experiment('POST /user', () => {
     };
 
     const res = await server.inject(options);
-    if(res.result && res.result.id) { // sometimes we don't get a result (i.e. 500)
+    if (res.result && res.result.id) { // sometimes we don't get a result (i.e. 500)
       tokens.push(res.result.id);
     }
     expect(res.statusCode).to.equal(200);
@@ -88,7 +87,6 @@ lab.experiment('POST /user', () => {
     };
 
     server.inject(options, (res) => {
-      console.log('res', res, res.statusCode);
       expect(res.statusCode).to.equal(500);
       stub.restore();
       done();

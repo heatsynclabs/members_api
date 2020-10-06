@@ -12,31 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const Joi = require('joi');
-const { omit } = require('lodash');
+const breadRoutes = require('../lib/breadRoutes');
+const model = require('../models/cards');
 
-const {
-  all
-} = require('../lib/cards');
+const routes = breadRoutes({ model });
 
-const cert = {
-  id: Joi.number(),
-  name: Joi.string().max(255).required(),
-  description: Joi.string().max(1000)
-};
-
-module.exports = [
-  {
-    method: 'GET',
-    path: '/cards',
-    config: {
-      auth: {
-        strategy: 'jwt',
-        scope: ['ADMIN'],
-      },
-      handler: all,
-      description: 'list cards',
-      tags: ['api', 'cards'], // ADD THIS TAG
-    },
-  }
-];
+module.exports = routes;

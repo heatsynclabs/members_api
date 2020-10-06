@@ -12,15 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const debug = require('debug')('cards');
-const bread = require('./bread');
+const breadRoutes = require('../lib/breadRoutes');
+const userBreadRoutes = require('../lib/userBreadRoutes');
+const model = require('../models/notice_comments');
 
-const { allCards } = require('./queries');
+const routes = breadRoutes({ model, scopes: { browse: ['USER'], default: ['ADMIN'] }, skip: ['read', 'add', 'edit', 'delete'] });
+const userRoutes = userBreadRoutes({ model });
 
-function all() {
-  return bread.raw(allCards, {});
-}
-
-module.exports = {
-  all
-};
+module.exports = routes.concat(userRoutes);

@@ -12,26 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const knex = require('../knex');
-const debug = require('debug')('errors');
-const { sendValidation } = require('./email');
+const breadRoutes = require('../lib/breadRoutes');
+const model = require('../models/memberships');
 
-async function createValidation(data) {
-  const tt = await knex('time_token')
-    .returning(['id', 'user_id', 'token_type'])
-    .insert({
-      user_id: data.id,
-      token_type: 'VALIDATION',
-    });
+const routes = breadRoutes({ model });
 
-  try {
-    await sendValidation(data.email, tt[0].id);
-  } catch (err) {
-    debug('Sendgrid email sending error: ', err);
-    throw err;
-  }
-
-  return tt[0];
-}
-
-module.exports = createValidation;
+module.exports = routes;

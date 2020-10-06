@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const Joi = require('joi');
-const { omit } = require('lodash');
+const { omit, pick } = require('lodash');
 
 const {
   add,
@@ -22,7 +22,6 @@ const {
   validate,
   byIdCached,
   del,
-  all,
   newUsersCached
 } = require('../lib/users');
 const { resetRequest, resetPassword } = require('../lib/reset');
@@ -32,7 +31,7 @@ const user = {
   email: Joi.string().email().required(),
   password: Joi.string().regex(/^[a-zA-Z0-9]{6,1000}$/),
   name: Joi.string().max(255),
-  phone:  Joi.string().max(20),
+  phone: Joi.string().max(20),
   current_skills: Joi.string().max(1000),
   desired_skills: Joi.string().max(1000),
   waiver: Joi.date(),
@@ -59,14 +58,15 @@ module.exports = [
     path: '/users/me',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       handler: (req) => {
-        return {
-          id: req.auth.credentials.id,
-          email: req.auth.credentials.email,
-        };
+        // console.log('me', req.auth);
+        if (Array.isArray(req.auth.credentials)) {
+          return pick(req.auth.credentials[0], ['email', 'scope', 'id', 'name']);
+        }
+        return pick(req.auth.credentials, ['email', 'scope', 'id', 'name']);
       },
       description: 'Checks Authentication',
       notes: 'Returns back the settings of your authentication',
@@ -78,7 +78,7 @@ module.exports = [
     path: '/users/{user_id}',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       handler: req => byIdCached(req.params.user_id),
@@ -86,9 +86,9 @@ module.exports = [
       notes: 'Returns back the specified user object',
       tags: ['api'], // ADD THIS TAG
       validate: {
-        params: {
+        params: Joi.object({
           user_id: Joi.string().uuid().required(),
-        },
+        }),
       },
     },
   },
@@ -97,7 +97,7 @@ module.exports = [
     path: '/users/{user_id}',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       handler: req => del(req.params.user_id),
@@ -105,9 +105,9 @@ module.exports = [
       notes: 'Deletes a user',
       tags: ['api'], // ADD THIS TAG
       validate: {
-        params: {
+        params: Joi.object({
           user_id: Joi.string().uuid().required(),
-        },
+        }),
       },
     },
   },
@@ -116,7 +116,7 @@ module.exports = [
     path: '/users/count',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       handler: count,
@@ -125,26 +125,26 @@ module.exports = [
       tags: ['api'], // ADD THIS TAG
     },
   },
-  {
-    method: 'GET',
-    path: '/users/all',
-    config: {
-      auth: {
-        strategy: 'jwt',
-        scope: ['USER'],
-      },
-      handler: all,
-      description: 'Gets all users',
-      notes: 'Returns back a list of users',
-      tags: ['api'], // ADD THIS TAG
-    },
-  },
+  // {
+  //   method: 'GET',
+  //   path: '/users/all',
+  //   config: {
+  //     auth: {
+  //       strategies: ['auth', 'jwt'],
+  //       scope: ['USER'],
+  //     },
+  //     handler: all,
+  //     description: 'Gets all users',
+  //     notes: 'Returns back a list of users',
+  //     tags: ['api'], // ADD THIS TAG
+  //   },
+  // },
   {
     method: 'GET',
     path: '/users/new_signups',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       handler: newUsersCached,
@@ -158,14 +158,14 @@ module.exports = [
     handler: req => browse(req.query),
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       description: 'Query for Users',
       notes: 'Query for Users',
       tags: ['api', 'users'],
       validate: {
-        query: omit(user, ['password']),
+        query: Joi.object(omit(user, ['password'])),
       },
     },
   },
@@ -179,7 +179,7 @@ module.exports = [
       notes: 'Adds a User',
       tags: ['api', 'users'],
       validate: {
-        payload: omit(required, ['id']),
+        payload: Joi.object(omit(required, ['id'])),
       },
     },
   },
@@ -193,9 +193,9 @@ module.exports = [
       notes: 'Based off of a token, this will validate a user',
       tags: ['api', 'users'],
       validate: {
-        params: {
+        params: Joi.object({
           token: Joi.string().uuid().required(),
-        },
+        }),
       },
     },
   },
@@ -209,22 +209,13 @@ module.exports = [
       notes: 'Based off of a token, this will reset a password',
       tags: ['api', 'users'],
       validate: {
-        params: {
+        params: Joi.object({
           token: Joi.string().uuid().required(),
-        },
-        payload: {
+        }),
+        payload: Joi.object({
           password: Joi.string().regex(/^[a-zA-Z0-9]{6,1000}$/).required(),
-          verify_password: Joi.any()
-            .valid(Joi.ref('password'))
-            .required()
-            .options({
-              language: {
-                any: {
-                  allowOnly: 'must match password'
-                }
-              }
-            })
-        }
+          verify_password: Joi.any().valid(Joi.ref('password')).required()
+        })
       },
     },
   },
@@ -238,9 +229,9 @@ module.exports = [
       notes: 'Based off of an email, requests a password reset for a user',
       tags: ['api', 'users'],
       validate: {
-        payload: {
+        payload: Joi.object({
           email: Joi.string().required(),
-        }
+        })
       },
     },
   }

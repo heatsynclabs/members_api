@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+const debug = require('debug')('seed');
 
-const config = require('./config');
 const bread = require('breadfruit')({
   client: 'postgresql',
   connection: process.env.NEW_DB_URL,
@@ -25,7 +25,7 @@ const oldbread = require('breadfruit')({
   pool: { min: 1, max: 7 }
 });
 
-const { pick, omit, forEach } = require('lodash');
+const { pick, omit, forEach, cloneDeep } = require('lodash');
 
 const userFields = [
   'id',
@@ -100,8 +100,9 @@ const paymentFields = [
 
 const newUsers = {};
 
-async function run() {
+const oldData = {};
 
+async function run() {
   const users = await oldbread.raw(`
   select
     u.*,
@@ -111,50 +112,58 @@ async function run() {
   from users u
   order by u.id
   `);
-  const contracts = await oldbread.raw(`select * from contracts`);
+  const contracts = await oldbread.raw('select * from contracts');
 
-  console.log('users', users.length, 'contracts', contracts.length);
+  debug('users', users.length, 'contracts', contracts.length);
 
   const userPromises = [];
-  users.forEach((user) => {
+
+  for (let index = 0; index < users.length; index++) {
+    const user = users[index];
     let u = user;
     u.legacy_id = u.id;
     u.password = u.encrypted_password;
     u.is_validated = true;
     u.payment_method = u.payment_method ? u.payment_method.toUpperCase() : null;
 
-    if(u.payment_method !== 'PAYPAL' && u.payment_method !== 'CASH') {
+    if (u.payment_method !== 'PAYPAL' && u.payment_method !== 'CASH') {
       u.payment_method = null;
     }
     u = omit(pick(u, userFields), 'id');
 
-    const p = bread.add('users', userFields, u)
-      .then((nu) => {
-        newUsers[nu.legacy_id] = nu;
-        console.log('new user', nu, user);
-        if(user.admin) {
-          return bread.add('memberships', ['user_id', 'group_id'], {user_id: nu.id, group_id: 'ADMIN'})
-            .then((newMem) => {
-              console.log('new membership', nu.name, newMem);
-              return nu;
-            });
-        }
-        return nu;
-      });
-    userPromises.push(p);
-  });
-  const usersSaved = await Promise.all(userPromises);
+    const existingUser = await bread.read('users', '*', {email: u.email});
+    let nu;
+
+    if(existingUser) {
+      console.log('EXISTING', u);
+      nu = await bread.edit('users', userFields, u, {id: existingUser.id});
+    } else {
+      // console.log('NEW', u);
+      nu = await bread.add('users', userFields, u);
+    }
+
+    if (user.admin) {
+      const newMem = await bread.add('memberships', ['user_id', 'group_id'], { user_id: nu.id, group_id: 'ADMIN' })
+      debug('new membership', nu.name, newMem);
+    }
+
+    newUsers[nu.legacy_id] = nu;
+
+    debug('new user', nu, user);
+    
+  }
+
 
   forEach(users, (user) => {
     forEach(user.user_cards, async (userCard) => {
       let uc = userCard;
-      if(uc.user_id && newUsers[uc.user_id]) {
+      if (uc.user_id && newUsers[uc.user_id]) {
         uc.user_id = newUsers[uc.user_id].id;
         uc.permissions = userCard.card_permissions;
         uc.note = userCard.name;
         uc = pick(uc, cardFields);
         const nuc = await bread.add('cards', cardFields, uc);
-        console.log('new card', nuc, userCard);
+        debug('new card', nuc, userCard);
       }
     });
   });
@@ -162,15 +171,14 @@ async function run() {
   forEach(users, (user) => {
     forEach(user.user_certs, async (userCert) => {
       let uc = userCert;
-      if(uc.user_id && newUsers[uc.user_id]) {
+      if (uc.user_id && newUsers[uc.user_id]) {
         uc.user_id = newUsers[uc.user_id].id;
-        if(uc.created_by && newUsers[uc.created_by]) {
+        if (uc.created_by && newUsers[uc.created_by]) {
           uc.created_by = newUsers[uc.created_by].id;
         }
         uc.cert_id = userCert.certification_id;
         uc = pick(uc, userCertFields);
         const nuc = await bread.add('user_certifications', userCertFields, uc);
-        console.log('new cert', nuc, userCert);
       }
     });
   });
@@ -178,37 +186,35 @@ async function run() {
   forEach(users, (user) => {
     forEach(user.user_payments, async (userPayment) => {
       let up = userPayment;
-      if(up.user_id && newUsers[up.user_id]) {
+      if (up.user_id && newUsers[up.user_id]) {
         up.user_id = newUsers[up.user_id].id;
-        if(up.created_by && newUsers[up.created_by]) {
+        if (up.created_by && newUsers[up.created_by]) {
           up.created_by = newUsers[up.created_by].id;
         }
-        if(up.amount) {
+        if (up.amount) {
           up.amount = Math.floor(up.amount * 100);
         } else {
           up.amount = null;
         }
         up = pick(up, paymentFields);
         const nup = await bread.add('payments', paymentFields, up);
-        console.log('new payment', up, userPayment);
+        debug('new payment', up, userPayment, nup);
       }
     });
   });
 
-
-
   forEach(contracts, async (contract) => {
     let c = contract;
-    if(c.user_id && newUsers[c.user_id]) {
+    if (c.user_id && newUsers[c.user_id]) {
       c.user_id = newUsers[c.user_id].id;
-    }
-    else{
+    } else {
       c.user_id = null;
     }
     c = pick(c, contractFields);
     const nc = await bread.add('contracts', contractFields, c);
-    console.log('new contract', nc, contract);
+    debug('new contract', nc, contract);
   });
+
 }
 
 run();

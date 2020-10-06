@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const faker = require('faker');
 const { Factory } = require('rosie');
 
 const event = new Factory();
 
 event
-  // .attr('id')
+  .attr('id')
   .attr('name')
   // .attr('description')
   .attr('start_date')
@@ -35,6 +34,7 @@ const fixture = [
     // end_date: '2019-10-11 15:00:00',
     frequency: 'weekly',
     location: 'HeatSync Labs',
+    created_by: 'users:0',
   }),
 ];
 

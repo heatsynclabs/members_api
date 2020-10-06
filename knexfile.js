@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module.exports = {
+const config = {
   client: 'postgresql',
   connection: process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/hsl',
   pool: {
@@ -21,5 +21,9 @@ module.exports = {
   },
   seeds: {
     directory: './migrations/seed'
-  },
-}
+  }
+};
+
+// console.log('knex', config);
+
+module.exports = config;

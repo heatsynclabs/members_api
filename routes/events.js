@@ -14,48 +14,24 @@
 
 const Joi = require('joi');
 const { omit } = require('lodash');
-
-const {
-  browse,
-  add,
-  edit,
-  del,
-  byIdCached
-} = require('../lib/events');
-const { resetRequest, resetPassword } = require('../lib/reset');
-
-const event = {
-  id: Joi.number(),
-  name: Joi.string().max(255),
-  description: Joi.string().max(10000),
-  start_date: Joi.date(),
-  end_date: Joi.date(),
-  frequency: Joi.string().max(20),
-  location: Joi.string().max(255),
-  created_at: Joi.date(),
-  updated_at: Joi.date(),
-};
-
-const required = Object.assign({}, event, {
-  name: Joi.string().required(),
-  start_date: Joi.date().required(),
-});
+const model = require('../models/events');
+const { getCreds } = require('../lib/util');
 
 module.exports = [
   {
     method: 'GET',
     path: '/events',
-    handler: req => browse(req.query),
+    handler: req => model.browse(req.query),
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
       description: 'Query for events',
       notes: 'Query for events',
       tags: ['api', 'events'],
       validate: {
-        query: omit(event, ['password']),
+        query: Joi.object(model.getFullQuerySchema()).label('eventQueryModel'),
       },
     },
   },
@@ -64,17 +40,17 @@ module.exports = [
     path: '/events/{event_id}',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
-      handler: req => byIdCached(req.params.event_id),
+      handler: req => model.readCached(req.params.event_id),
       description: 'Gets a event',
       notes: 'Returns back the specified event object',
       tags: ['api'], // ADD THIS TAG
       validate: {
-        params: {
-          event_id: Joi.string().uuid().required(),
-        },
+        params: Joi.object({
+          event_id: model.schema.id
+        }),
       },
     },
   },
@@ -83,47 +59,57 @@ module.exports = [
     path: '/events/{event_id}',
     config: {
       auth: {
-        strategy: 'jwt',
+        strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
-      handler: req => del(req.params.event_id),
+      handler: req => model.remove(req.params.event_id),
       description: 'Deletes an Event',
       notes: 'Deletes an Event',
       tags: ['api'], // ADD THIS TAG
       validate: {
-        params: {
-          event_id: Joi.string().uuid().required(),
-        },
+        params: Joi.object({
+          event_id: model.schema.id
+        }),
       },
     },
   },
   {
     method: 'POST',
     path: '/events',
-    handler: req => add(req.payload),
+    handler: (req) => {
+      req.payload.created_by = getCreds(req).id;
+      return model.add(req.payload);
+    },
     config: {
-      auth: false,
+      auth: {
+        strategies: ['auth', 'jwt'],
+        scope: ['USER'],
+      },
       description: 'Add An Event',
       notes: 'Adds an Event',
       tags: ['api', 'events'],
       validate: {
-        payload: omit(required, ['id']),
+        payload: Joi.object(omit(model.schema, ['id', 'created_by'])).label('eventsAddModel'),
       },
     },
   },
   {
     method: 'PATCH',
     path: '/events/{event_id}',
-    handler: req => edit(req.payload),
+    handler: req => model.edit(req.params.event_id, req.payload),
     config: {
-      auth: false,
+      auth: {
+        strategies: ['auth', 'jwt'],
+        scope: ['USER'],
+      },
       description: 'Edit An Event',
       notes: 'Edit an Event',
       tags: ['api', 'events'],
       validate: {
-        params: {
-          event_id: Joi.string().uuid().required(),
-        },
+        params: Joi.object({
+          event_id: model.schema.id
+        }),
+        payload: Joi.object(omit(model.schema, ['id', 'created_by'])),
       },
     },
   },
