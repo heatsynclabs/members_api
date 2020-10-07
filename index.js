@@ -81,7 +81,7 @@ async function start() {
   }
 }
 
-ws.createServer({server: server.listener}, mqtt.handle);
+ws.createServer({ server: server.listener }, mqtt.handle);
 
 // Don't worry be hapi
 start();

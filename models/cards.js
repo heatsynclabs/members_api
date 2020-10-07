@@ -5,7 +5,7 @@ const { activeCards } = require('../lib/queries');
 const { publish } = require('../lib/mqtt');
 
 function updateDoors() {
-  publish('/door/updates', {status: 'updated'});
+  publish('/door/updates', { status: 'updated' });
 }
 
 const model = breadModel({
