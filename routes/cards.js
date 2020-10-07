@@ -15,6 +15,22 @@
 const breadRoutes = require('../lib/breadRoutes');
 const model = require('../models/cards');
 
-const routes = breadRoutes({ model });
+const routes = breadRoutes({ model});
+
+routes.push(
+  {
+    method: 'GET',
+    path: '/cards/active',
+    config: {
+      auth: {
+        strategies: ['auth', 'jwt'],
+        scope: ['ADMIN', 'DOOR'],
+      },
+      handler: model.activeCards,
+      description: 'list active cards',
+      tags: ['api', 'cards'], // ADD THIS TAG
+    },
+  }
+);
 
 module.exports = routes;

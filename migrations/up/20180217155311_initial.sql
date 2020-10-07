@@ -385,6 +385,7 @@ INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt(
 INSERT INTO payment_methods (id) VALUES ('CASH');
 INSERT INTO payment_methods (id) VALUES ('PAYPAL');
 INSERT INTO groups (id, description) VALUES ('ADMIN', 'Admin users');
+INSERT INTO groups (id, description) VALUES ('DOOR', 'Door security devices');
 
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(1, 'Laser Cutter', 'Managed by Milton', '2013-01-25 16:19:24.331172', '2014-02-23 06:08:12.476114');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(2, 'Mill (CNC)', 'Prerequisite: Big Mill Managed by Oliver Fultz, Larry Campbell', '2013-01-25 16:19:44.716051', '2014-03-12 15:15:20.386834');

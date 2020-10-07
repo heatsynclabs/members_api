@@ -19,6 +19,8 @@ const JWTAuth = require('hapi-auth-jwt2');
 const HapiSwagger = require('hapi-swagger');
 const CookieAuth = require('@hapi/cookie');
 const debug = require('debug')('errors');
+const { mqtt } = require('./lib/mqtt');
+const ws = require('websocket-stream');
 const config = require('./config');
 const { validateJWT } = require('./lib/users');
 const handleRoles = require('./handleRoles');
@@ -78,6 +80,8 @@ async function start() {
     return err;
   }
 }
+
+ws.createServer({server: server.listener}, mqtt.handle);
 
 // Don't worry be hapi
 start();
