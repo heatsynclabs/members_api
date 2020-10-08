@@ -21,6 +21,7 @@
     "@hapi/inert": "^6.0.2",
     "@hapi/vision": "^6.0.1",
     "@sendgrid/mail": "^6.2.1",
+    "aedes": "^0.43.0",
     "b64id": "^1.0.0",
     "bcrypt": "^5.0.0",
     "bluebird": "^3.5.1",
@@ -41,7 +42,8 @@
     "pg": "^8.3.3",
     "redis": "^2.8.0",
     "sharp": "^0.26.1",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "websocket-stream": "^5.5.2"
   },
   "devDependencies": {
     "code": "^5.2.0",
