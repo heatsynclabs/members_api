@@ -60,7 +60,7 @@ module.exports = [
     config: {
       auth: {
         strategies: ['auth', 'jwt'],
-        scope: ['USER'],
+        scope: ['ADMIN'],
       },
       handler: req => model.remove(req.params.event_id),
       description: 'Deletes an Event',
@@ -83,7 +83,7 @@ module.exports = [
     config: {
       auth: {
         strategies: ['auth', 'jwt'],
-        scope: ['USER'],
+        scope: ['ADMIN'],
       },
       description: 'Add An Event',
       notes: 'Adds an Event',
@@ -94,13 +94,13 @@ module.exports = [
     },
   },
   {
-    method: 'PATCH',
+    method: 'PUT',
     path: '/events/{event_id}',
     handler: req => model.edit(req.params.event_id, req.payload),
     config: {
       auth: {
         strategies: ['auth', 'jwt'],
-        scope: ['USER'],
+        scope: ['ADMIN'],
       },
       description: 'Edit An Event',
       notes: 'Edit an Event',
