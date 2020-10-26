@@ -19,20 +19,21 @@ const url = require('url');
 
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
-const { users } = require('../../fixtures');
+const { users, groups, memberships } = require('../../fixtures');
 
 lab.experiment('POST /events', () => {
   let Authorization;
   let data;
 
   lab.before(async () => {
-    data = await fixtures.create({ users });
-    const authRes = await getAuthToken(data.users[0]);
+    data = await fixtures.create({ users, groups, memberships });
+    const authRes = await getAuthToken(data.users[1]);
+    console.log('authing with',data.users[1]);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users });
+    return destroyRecords(data);
   });
 
   lab.test('should create an event', async () => {

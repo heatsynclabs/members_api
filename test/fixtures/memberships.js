@@ -12,13 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module.exports = {
-  /* eslint-disable */
-  users: require('./users'),
-  groups: require('./groups'),
-  memberships: require('./memberships'),
-  events: require('./events'),
-  time_token: require('./time_token'),
-  tokens: require('./tokens')
-  /* eslint-enable */
-};
+const faker = require('faker');
+const { Factory } = require('rosie');
+
+const membership = new Factory();
+
+membership
+  .attr('id')
+  .attr('user_id')
+  .attr('group_id');
+
+const fixture = [
+  membership.build({
+    user_id: 'users:1',
+    group_id: 'ADMIN'
+  }),
+];
+
+module.exports = fixture;

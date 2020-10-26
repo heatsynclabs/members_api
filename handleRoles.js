@@ -25,9 +25,14 @@ const errors = require('./lib/errors');
 // TODO: We might be able to move this to Hapi scope functions on a per route basis!
 // This only gets called after a scope has matched a route scope
 module.exports = function handleRoles(request, h) {
+  console.log('req',request);
+  console.log('routeauth',get(request, 'route.settings.auth', []));
+  console.log('routeauth',get(request, 'route.settings.auth.access[0].scope', []));
   const routeScope = get(request, 'route.settings.auth.access[0].scope.selection', []);
+  console.log('userauth',get(request, 'auth', []));
+  console.log('userauth',get(request, 'auth.credentials', []));
   const userScope = get(request, 'auth.credentials.scope', []);
-  // console.log('\n\nhandleRoles', request.path, request.params, 'routeScope', routeScope, 'userScope', userScope);
+  console.log('\n\nhandleRoles', request.path, request.params, 'routeScope', routeScope, 'userScope', userScope);
 
   // If user has credentials AND route requires credentials
   if (request.auth.credentials && (routeScope.length > 0)) {

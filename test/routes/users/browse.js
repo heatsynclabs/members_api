@@ -19,21 +19,22 @@ const url = require('url');
 
 const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
-const { users } = require('../../fixtures');
+const { users, groups, memberships } = require('../../fixtures');
 
 lab.experiment('GET /users/', () => {
   let user;
   let Authorization;
+  let data;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users });
-    user = data.users[0];
-    const authRes = await getAuthToken(data.users[0]);
+    data = await fixtures.create({ users, groups, memberships });
+    user = data.users[1];
+    const authRes = await getAuthToken(user);
     Authorization = authRes.token;
   });
 
   lab.after(() => {
-    return destroyRecords({ users });
+    return destroyRecords(data);
   });
 
   lab.test('should retrieve my information when logged in', (done) => {

@@ -31,7 +31,9 @@ const fixtures = new Fixtures(fixturesConfig);
 const deleteOrder = [
   'time_token',
   'events',
+  'memberships',
   'users',
+  'groups'
 ];
 
 module.exports = {
@@ -48,6 +50,7 @@ module.exports = {
             key = 'email';
           }
           deleteRecords[deleteRecords.length - 1][tableName].push(record[key]);
+          console.log('prepping to delete',tableName,key,record);
         });
       }
     });
@@ -60,7 +63,7 @@ module.exports = {
       if (tableName === 'users') {
         key = 'email';
       }
-
+      console.log('deleting',table,tableName,key,ids);
       return knex(tableName)
         .whereIn(key, ids)
         .del()
