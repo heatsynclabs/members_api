@@ -34,7 +34,9 @@ then
   npm run start
 elif [[ $NODE_ENV == "development" ]]
 then
-  npm run up && npm run develop
+  npm run up
+  npm run seed
+  npm run develop
 else
   echo "Improper NODE_ENV=$NODE_ENV, stopping"
 fi
