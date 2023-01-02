@@ -13,7 +13,8 @@
     "lint": "eslint . --ext .js",
     "coverage": "NODE_ENV=test nyc cover lab -v --leaks",
     "up": "knex migrate:latest",
-    "down": "knex migrate:rollback"
+    "down": "knex migrate:rollback",
+	"seed": "knex seed:run"
   },
   "dependencies": {
     "@hapi/cookie": "^12.0.0",
