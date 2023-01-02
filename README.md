@@ -8,6 +8,22 @@ This is the API component of the [members_app](https://github.com/heatsynclabs/m
 
 ## Normal Docker Dev Usage
 
+### Prerequisites
+
+- Docker Compose v2 or higher (run `docker compose version` or `docker-compose version`)
+
+### ARM vs x86 Considerations
+
+Due to the way npm handles binary packages across different CPU architectures, **if you run add a new dependency** (npm install ...), you will have to remove the volume and recreate the image, so something like:
+
+```
+docker compose rm -fsv members_api
+docker volume rm members_api_nm
+docker compose up -d members_api
+```
+
+### Instructions
+
 **Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
 
 If you need to override some of the default environment variables or ports in from the docker-compose.yml file, you can create a docker-compose.override.yml and add your own environment variables or ports there. This file is automatically used by docker-compose and is ignored by git, so you can safely add it to your local repo.
@@ -16,7 +32,7 @@ If you need to override some of the default environment variables or ports in fr
 
 Take note of port numbers, DATABASE_URL, SENDGRID_API_KEY, and volume paths.
 
-You can add the following parameters to the docker-compose file if desired:
+You can add the following parameters to a new docker-compose.override.yml file if desired:
   - `NPMINSTALL: 1`
     - allows you to re-run npm install on boot so that if you're using volumes your local filesystem is prepared to run the app (not just the filesystem inside the docker image)
   - `volumes:`
@@ -25,14 +41,14 @@ You can add the following parameters to the docker-compose file if desired:
 
 If you have issues with docker volumes (i.e. local file changes don't affect the docker filesystem), try rebuilding:
   - delete all images and containers locally with `docker rm <container_id> && docker rmi <image_id>`
-  - `docker-compose down`
-  - `docker-compose build --no-cache`
-  - `docker-compose up --verbose`
+  - `docker compose down`
+  - `docker compose build --no-cache`
+  - `docker compose up --verbose`
 
 Review the `Dockerfile` so you know what's about to be booted. For example, the working directory, package.json, and CMD (including npm install and fixture-installation commands) lines which by default will affect your environment.
 
 Create the docker container for the api and database:
-`docker-compose up`
+`docker compose up`
 
 To access the container's shell prompt:
 `docker exec -it members_api /bin/sh`
