@@ -97,3 +97,7 @@ Create an event:
 
 Delete an event:
   `curl -X DELETE -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/events/YOUR_EVENT_ID_HERE`
+
+## Emails/SMTP
+
+[Inbucket](https://inbucket.org) is running on http://localhost:10001 by default in dev mode so that you can receive emails without actually sending anything.
