@@ -15,19 +15,32 @@
 version: "3"
 services:
   members_api:
+    restart: 'unless-stopped'
     container_name: members_api
-    build: .
+    build:
+      target: dev
+      context: .
     depends_on:
-      - members_postgres
+      members_postgres:
+        condition: service_healthy
     ports:
       - "3004:3004"
       - "9229:9229"
     environment:
       NODE_PORT: 3004
       NODE_ENV: "development"
-      SENDGRID_API_KEY: "some big ass sendgrid key"
       DATABASE_URL: "postgres://postgres:postgres@members_postgres:5432/hsl_dev"
+      SMTP_HOST: "inbucket"
+      SMTP_PORT: "10025"
+      SMTP_USER: "user"
+      SMTP_PASSWORD: "passw0rd"
       JWT_KEY: "some random key"
+    volumes:
+      - .:/home/app
+      # this hack is needed to allow the local machine and the container to have their own node_modules.
+      # useful for mac m1 owner
+      # leave this line last.
+      - nm:/home/app/node_modules/
 
   members_postgres:
     container_name: members_postgres
@@ -37,4 +50,26 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: hsl_dev
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    
+  inbucket:
+    image: inbucket/inbucket:3.0.4
+    restart: always
+    ports:
+      - 10001:10001 # inbucket web ui
+    environment:
+      INBUCKET_WEB_ADDR: "0.0.0.0:10001"
+      INBUCKET_POP3_ADDR: "0.0.0.0:10110"
+      INBUCKET_SMTP_ADDR: "0.0.0.0:10025"
 
+volumes:
+  db_data:
+    driver: local
+  nm:
+    driver: local

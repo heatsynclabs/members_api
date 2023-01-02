@@ -14,9 +14,9 @@
 
 const env = process.env.NODE_ENV || 'development';
 const port = process.env.NODE_PORT || process.env.PORT || 3004;
-const Pack = require('./package');
-const knexFile = require('./knexfile');
 const { forEach, startsWith, lowerCase } = require('lodash');
+const Pack = require('./package.json');
+const knexFile = require('./knexfile');
 
 const jwt = {
   password: process.env.JWT_KEY,
@@ -152,9 +152,14 @@ module.exports = {
     }],
     pathPrefixSize: 3,
   },
-  sendgrid: {
-    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-    // disable_sending: (env != "production")
+  email: {
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY, // has priority over other means for email
+    SMTP_HOST: process.env.SMTP_HOST,
+    SMTP_PORT: process.env.SMTP_PORT,
+    SMTP_USER: process.env.SMTP_USER || '',
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD || '',
+    SMTP_SECURE: process.env.SMTP_SECURE || false,
+    disable_sending: false,
   },
   server: {},
   version: Pack.version

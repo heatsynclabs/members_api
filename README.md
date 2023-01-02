@@ -10,11 +10,7 @@ This is the API component of the [members_app](https://github.com/heatsynclabs/m
 
 **Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
 
-First, create a local copy of your docker-compose:
-`cp docker-compose.dist.yml docker-compose.yml`
-
-And edit it as desired:
-`nano docker-compose.yml`
+If you need to override some of the default environment variables or ports in from the docker-compose.yml file, you can create a docker-compose.override.yml and add your own environment variables or ports there. This file is automatically used by docker-compose and is ignored by git, so you can safely add it to your local repo.
 
   > **Warning, this docker image is intended for dev mode** attached to a destroyable Postgres server and npm-install-able project folder. ***Running this in critical/prod environments is strongly discouraged without lots of testing!!!***
 

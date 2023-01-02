@@ -19,8 +19,8 @@ const JWTAuth = require('hapi-auth-jwt2');
 const HapiSwagger = require('hapi-swagger');
 const CookieAuth = require('@hapi/cookie');
 const debug = require('debug')('errors');
-const { mqtt } = require('./lib/mqtt');
 const ws = require('websocket-stream');
+const { mqtt } = require('./lib/mqtt');
 const config = require('./config');
 const { validateJWT } = require('./lib/users');
 const handleRoles = require('./handleRoles');
@@ -54,9 +54,6 @@ async function start() {
 
   server.auth.strategy('auth', 'cookie', {
     cookie: config.cookies,
-    validateFunc: async () => {
-      return { valid: true };
-    }
   });
   server.auth.strategy('jwt', 'jwt', {
     verifyOptions: { algorithms: ['HS256'] },
@@ -71,7 +68,6 @@ async function start() {
 
   // Automatically turn custom error types into http error responses
   server.ext('onPreResponse', handleErrors);
-
 
   try {
     await server.start();

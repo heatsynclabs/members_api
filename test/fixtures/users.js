@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 const { Factory } = require('rosie');
 
 const user = new Factory();

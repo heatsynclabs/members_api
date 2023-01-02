@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 const { Factory } = require('rosie');
-const uuidV4 = require('uuid/v4');
+const { v4: uuidV4 } = require('uuid');
 
 const time_token = new Factory();
 

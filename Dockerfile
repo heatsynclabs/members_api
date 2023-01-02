@@ -12,26 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:12.9.1-alpine
-EXPOSE 3000 9229
+FROM node:16-alpine AS dev
+
+EXPOSE 3004 9229
 
 RUN apk update
-
-RUN apk add \
-  build-base \
-  python2
 
 WORKDIR /home/app
 
 COPY package.json /home/app/
-#COPY package-lock.json /home/app/
+COPY package-lock.json /home/app/
+COPY docker-run.sh /home/app/
 
-#RUN npm ci
-
-# Temporary copy that will likely be overwritten by a volume
-COPY . /home/app
-
-#RUN npm run build
-RUN npm install
+RUN npm ci
 
 CMD /home/app/docker-run.sh
