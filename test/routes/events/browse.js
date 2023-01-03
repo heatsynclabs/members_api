@@ -17,7 +17,7 @@ const { expect } = require('code');
 const lab = exports.lab = require('lab').script();
 const url = require('url');
 
-const server = require('../../../');
+const server = require('../../..');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 

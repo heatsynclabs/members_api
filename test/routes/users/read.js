@@ -17,7 +17,7 @@ const { expect } = require('code');
 const lab = exports.lab = require('lab').script();
 const url = require('url');
 
-const server = require('../../../');
+const server = require('../../..');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 
@@ -44,7 +44,6 @@ lab.experiment('GET /users/{user_id}', () => {
       method: 'GET',
       headers: { Authorization },
     };
-
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
@@ -78,7 +77,6 @@ lab.experiment('GET /users/{user_id}', () => {
     expect(res.statusCode).to.equal(404);
     expect(res.result).to.be.an.object();
   });
-
 
   lab.test('should error with invalid user_id', async () => {
     const options = {

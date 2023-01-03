@@ -17,7 +17,7 @@ const { forEach, keys, values } = require('lodash');
 const promise = require('bluebird');
 const debug = require('debug')('errors');
 const url = require('url');
-const server = require('../');
+const server = require('..');
 const { connection } = require('../knexfile');
 const knex = require('../knex');
 
@@ -72,7 +72,7 @@ module.exports = {
     });
   },
   async destroyTokens(userIds) {
-    return promise.each(userIds, id => knex('time_token')
+    return promise.each(userIds, (id) => knex('time_token')
       .where('user_id', id)
       .del()
       .then(() => id));
