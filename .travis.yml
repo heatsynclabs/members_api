@@ -35,7 +35,7 @@ install:
   - docker-compose up -d
 
 script:
-  - docker exec -it members_api sh -c 'npm run test'
+  - docker exec -it members_api sh -c 'npm run ci'
 
 before_deploy:
   - docker tag members_api_members_api:latest registry.heroku.com/$HEROKU_APP/web

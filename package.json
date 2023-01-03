@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "main": "index.js",
   "scripts": {
+    "ci": "npx concurrently \"npm run lint\" \"npm run test\"",
     "start": "knex migrate:latest && node index.js",
     "inspect": "nodemon --inspect index.js",
     "develop": "DEBUG=error*,general* nodemon --trace-warnings index",
@@ -14,7 +15,7 @@
     "coverage": "NODE_ENV=test nyc cover lab -v --leaks",
     "up": "knex migrate:latest",
     "down": "knex migrate:rollback",
-	"seed": "knex seed:run"
+    "seed": "knex seed:run"
   },
   "dependencies": {
     "@hapi/cookie": "^12.0.0",
@@ -50,6 +51,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "code": "^5.2.4",
+    "concurrently": "7.6.0",
     "eslint": "^8.31.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
