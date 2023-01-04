@@ -16,9 +16,10 @@ const { expect } = require('code');
 // eslint-disable-next-line
 const lab = exports.lab = require('lab').script();
 const url = require('url');
+const knex = require('../../../knex');
 
-const server = require('../../../');
-const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const server = require('../../..');
+const { destroyRecords, getAuthToken } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 
 lab.experiment('GET /user/me', () => {
@@ -26,14 +27,15 @@ lab.experiment('GET /user/me', () => {
   let Authorization;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users });
-    user = data.users[0];
-    const authRes = await getAuthToken(data.users[0]);
+    await knex('users').insert(users);
+    const authRes = await getAuthToken(users[0]);
+
+    user = await knex('users').first('id', 'email');
     Authorization = authRes.token;
   });
 
-  lab.after(() => {
-    return destroyRecords({ users });
+  lab.after(async () => {
+    await destroyRecords({ users });
   });
 
   lab.test('should retrieve my information when logged in', async () => {

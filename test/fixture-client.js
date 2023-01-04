@@ -17,7 +17,7 @@ const { forEach, keys, values } = require('lodash');
 const promise = require('bluebird');
 const debug = require('debug')('errors');
 const url = require('url');
-const server = require('../');
+const server = require('..');
 const { connection } = require('../knexfile');
 const knex = require('../knex');
 
@@ -28,25 +28,52 @@ const fixturesConfig = {
 
 const fixtures = new Fixtures(fixturesConfig);
 
-const deleteOrder = [
+const tableDeleteOrder = [
   'time_token',
   'events',
   'users',
 ];
 
+const tableToDeleteKey = {
+  time_token: 'id',
+  events: 'id',
+  users: 'email'
+};
+
+async function mapRelation(relationValue) {
+  const [tableName, offset] = relationValue.split(':');
+  return (await knex(tableName).offset(offset).first('id')).id;
+}
+
+// Replace relation fields in fixtures with ids from real tables
+// createMapRelations(['created_by']) creates a function which accepts a
+// collection of untransformed fixtures and replaces the `created_by` field
+// of each one with the corresponding user id from the database.
+function createMapRelations(relationNames) {
+  return async function mapRelations(collection) {
+    return Promise.all(collection.map(async (item) => ({
+      ...item,
+      ...(Object
+        .fromEntries((
+          await Promise.all(
+            relationNames
+              .map(async (relationName) => mapRelation(item[relationName]))
+          ))
+          .map((relation, index) => [relationNames[index], relation])))
+    })));
+  };
+}
+
 module.exports = {
+  createMapRelations,
   destroyRecords(tables) {
-    // console.log('destroying records');
     const deleteRecords = [];
 
-    forEach(deleteOrder, (tableName) => {
+    forEach(tableDeleteOrder, (tableName) => {
       if (tables[tableName]) {
+        const key = tableToDeleteKey[tableName];
         deleteRecords.push({ [tableName]: [] });
         forEach(tables[tableName], (record) => {
-          let key = 'id';
-          if (tableName === 'users') {
-            key = 'email';
-          }
           deleteRecords[deleteRecords.length - 1][tableName].push(record[key]);
         });
       }
@@ -55,11 +82,7 @@ module.exports = {
     return promise.each(deleteRecords, (table) => {
       const tableName = keys(table)[0];
       const ids = values(table)[0];
-      let key = 'id';
-
-      if (tableName === 'users') {
-        key = 'email';
-      }
+      const key = tableToDeleteKey[tableName];
 
       return knex(tableName)
         .whereIn(key, ids)
@@ -72,7 +95,7 @@ module.exports = {
     });
   },
   async destroyTokens(userIds) {
-    return promise.each(userIds, id => knex('time_token')
+    return promise.each(userIds, (id) => knex('time_token')
       .where('user_id', id)
       .del()
       .then(() => id));

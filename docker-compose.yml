@@ -21,7 +21,7 @@ services:
       target: dev
       context: .
     depends_on:
-      members_postgres:
+      members_api_postgres:
         condition: service_healthy
     ports:
       - "3004:3004"
@@ -29,7 +29,8 @@ services:
     environment:
       NODE_PORT: 3004
       NODE_ENV: "development"
-      DATABASE_URL: "postgres://postgres:postgres@members_postgres:5432/hsl_dev"
+      NPMINSTALL: 1
+      DATABASE_URL: "postgres://postgres:postgres@members_api_postgres:5432/hsl_dev"
       SMTP_HOST: "inbucket"
       SMTP_PORT: "10025"
       SMTP_USER: "user"
@@ -42,8 +43,8 @@ services:
       # leave this line last.
       - nm:/home/app/node_modules/
 
-  members_postgres:
-    container_name: members_postgres
+  members_api_postgres:
+    container_name: members_api_postgres
     image: postgres:11.2-alpine
     ports:
       - "5432:5432"
@@ -57,7 +58,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    
+
   inbucket:
     image: inbucket/inbucket:3.0.4
     restart: always
@@ -67,6 +68,22 @@ services:
       INBUCKET_WEB_ADDR: "0.0.0.0:10001"
       INBUCKET_POP3_ADDR: "0.0.0.0:10110"
       INBUCKET_SMTP_ADDR: "0.0.0.0:10025"
+
+  test:
+    container_name: "test"
+    depends_on:
+      members_api_postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgres://postgres:postgres@members_api_postgres:5432/hsl_dev"
+      JWT_KEY: "some random key"
+      NODE_ENV: "test"
+      NPMINSTALL: 1
+    build:
+      target: dev
+      context: .
+    volumes:
+      - .:/home/app
 
 volumes:
   db_data:

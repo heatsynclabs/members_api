@@ -17,17 +17,17 @@ const { expect } = require('code');
 const lab = exports.lab = require('lab').script();
 const url = require('url');
 
-const server = require('../../../');
-const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const server = require('../../..');
+const { destroyRecords, getAuthToken } = require('../../fixture-client');
 const { users } = require('../../fixtures');
+const knex = require('../../../knex');
 
 lab.experiment('POST /events', () => {
   let Authorization;
-  let data;
 
   lab.before(async () => {
-    data = await fixtures.create({ users });
-    const authRes = await getAuthToken(data.users[0]);
+    await knex('users').insert(users);
+    const authRes = await getAuthToken(users[0]);
     Authorization = authRes.token;
   });
 
