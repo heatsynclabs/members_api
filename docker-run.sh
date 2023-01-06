@@ -39,6 +39,7 @@ then
   npm run develop
 elif [[ $NODE_ENV == "test" ]]
 then
+  npm run up
   npm run test
 else
   echo "Improper NODE_ENV=$NODE_ENV, stopping"
