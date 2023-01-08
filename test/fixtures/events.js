@@ -36,6 +36,16 @@ const fixture = [
     location: 'HeatSync Labs',
     created_by: 'users:0',
   }),
+  event.build({
+    // id: '44fecd99-3400-449a-b13c-61ad7ffd1d11',
+    name: '3D Printer Class',
+    // description: 'Join this class!\r\nIt\'s fun!',
+    start_date: new Date('2019-11-12 14:00:00'),
+    // end_date: '2019-10-11 15:00:00',
+    frequency: 'biweekly',
+    location: 'HeatSync Labs',
+    created_by: 'users:0',
+  }),
 ];
 
 module.exports = fixture;

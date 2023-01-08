@@ -6,9 +6,9 @@ const model = breadModel({
   softDelete: true,
   schema: {
     id: Joi.string().uuid().required(),
-    name: Joi.string(),
+    name: Joi.string().required(),
     description: Joi.string(),
-    start_date: Joi.date(),
+    start_date: Joi.date().required(),
     end_date: Joi.date(),
     location: Joi.string(),
     frequency: Joi.string(),

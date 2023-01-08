@@ -46,18 +46,20 @@ lab.experiment('PATCH /events/', () => {
   });
 
   lab.test('should successfully edit an event', async () => {
-    const sampleEvent = await knex('events').first('id', 'is_deleted');
-    sampleEvent.name = 'fookie';
+    const eventsToEdit = await knex('events');
+    eventsToEdit[0].name = "fookie";
+
     const options = {
-      url: url.format(`/events/${sampleEvent.id}`),
+      url: url.format(`/events/${eventsToEdit[0].id}`),
       method: 'PATCH',
       headers: { Authorization },
-      payload: omit(sampleEvent, ['id', 'created_by']),
+      payload: omit(eventsToEdit[0], ['id', 'created_by']),
     };
 
     const res = await server.inject(options);
+    console.log(res);
     expect(res.statusCode).to.equal(200);
-    expect(res.result.id).to.equal(sampleEvent.id);
+    expect(res.result.id).to.equal(eventsToEdit[0].id);
     expect(res.result.name).to.equal('fookie');
   });
 });

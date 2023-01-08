@@ -57,4 +57,22 @@ lab.experiment('POST /events', () => {
     expect(res.result).to.be.an.object();
     expect(res.result).to.include('id');
   });
+
+  lab.test('should error with missing name', async () => {
+    const e = {
+      start_date: new Date('2019-11-11 13:00:00'),
+      frequency: 'weekly',
+      location: 'HeatSync Labs',
+    };
+
+    const options = {
+      url: url.format('/events'),
+      method: 'POST',
+      payload: e,
+      headers: { Authorization },
+    };
+
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(400);
+  });
 });
