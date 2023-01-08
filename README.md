@@ -1,8 +1,6 @@
 # Member Management API
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
-[![Lint](https://github.com/heatsynclabs/members_api/actions/workflows/lint.yml/badge.svg)](https://github.com/heatsynclabs/members_api/actions/workflows/lint.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint](https://github.com/heatsynclabs/members_api/actions/workflows/lint.yml/badge.svg)](https://github.com/heatsynclabs/members_api/actions/workflows/lint.yml) [![Test](https://github.com/heatsynclabs/members_api/actions/workflows/test.yml/badge.svg)](https://github.com/heatsynclabs/members_api/actions/workflows/test.yml)
 
 This is the API component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info and general readme information.
 
