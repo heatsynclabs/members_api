@@ -30,7 +30,7 @@ const handleErrors = require('./handleErrors');
 const Routes = require('./routes');
 
 // Declare a new instance of hapi
-const server = Hapi.server(config.connection);
+const server = Hapi.server(config.hapiServerOptions);
 
 // Start server function
 async function start() {

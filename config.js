@@ -16,7 +16,6 @@ const env = process.env.NODE_ENV || 'development';
 const port = process.env.NODE_PORT || process.env.PORT || 3004;
 const { forEach, startsWith, lowerCase } = require('lodash');
 const Pack = require('./package.json');
-const knexFile = require('./knexfile');
 
 const jwt = {
   password: process.env.JWT_KEY,
@@ -48,7 +47,7 @@ forEach(process.env, (v, k) => {
   }
 });
 
-const connectionOptions = {
+const hapiServerOptions = {
   test: {
     host: '0.0.0.0',
     port,
@@ -116,11 +115,17 @@ const cache = {
   },
 };
 
+const databaseOptions = {
+  test: 'postgres://postgres:postgres@members_api_postgres:5432/members_api_db',
+  development: process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/members_api_db',
+  production: process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/members_api_db'
+};
+
 module.exports = {
   env,
-  knex: knexFile,
   siteName: process.env.SITE_NAME || 'HeatSync Labs',
-  connection: connectionOptions[env],
+  hapiServerOptions: hapiServerOptions[env],
+  databaseUrl: databaseOptions[env],
   jwt,
   cookies,
   oauth,

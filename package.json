@@ -12,9 +12,10 @@
     "test": "NODE_ENV=test lab -v --leaks",
     "lint": "eslint . --ext .js",
     "coverage": "NODE_ENV=test nyc cover lab -v --leaks",
-    "up": "knex migrate:latest",
-    "down": "knex migrate:rollback",
-    "seed": "knex seed:run"
+    "db_clear": "node scripts/db_clear.js",
+    "db_migrate_up": "knex migrate:latest",
+    "db_migrate_down": "knex migrate:rollback",
+    "db_seed": "knex seed:run"
   },
   "dependencies": {
     "@hapi/cookie": "^12.0.0",
@@ -56,6 +57,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.11",
+    "knex-schema-inspector": "^3.0.0",
     "lab": "^18.0.2",
     "nodemon": "^2.0.20",
     "nyc": "^15.1.0",

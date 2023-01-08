@@ -34,12 +34,13 @@ then
   npm run start
 elif [[ $NODE_ENV == "development" ]]
 then
-  npm run up
-  npm run seed
+  npm run db_migrate_up
+  npm run db_seed
   npm run develop
 elif [[ $NODE_ENV == "test" ]]
 then
-  npm run up
+  npm run db_migrate_up
+  npm run db_clear
   npm run test
 else
   echo "Improper NODE_ENV=$NODE_ENV, stopping"

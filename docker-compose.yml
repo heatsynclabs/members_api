@@ -28,9 +28,9 @@ services:
       - "9229:9229"
     environment:
       NODE_PORT: 3004
-      NODE_ENV: "development"
+      NODE_ENV: "${NODE_ENV:-development}"
       NPMINSTALL: 1
-      DATABASE_URL: "postgres://postgres:postgres@members_api_postgres:5432/hsl_dev"
+      DATABASE_URL: "postgres://postgres:postgres@members_api_postgres:5432/members_api_db"
       SMTP_HOST: "inbucket"
       SMTP_PORT: "10025"
       SMTP_USER: "user"
@@ -50,9 +50,9 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: hsl_dev
+      POSTGRES_DB: members_api_db
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data_${NODE_ENV:-development}:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -70,7 +70,11 @@ services:
       INBUCKET_SMTP_ADDR: "0.0.0.0:10025"
 
 volumes:
-  db_data:
+  db_data_development:
+    driver: local
+  db_data_production:
+    driver: local
+  db_data_test:
     driver: local
   nm:
     driver: local
