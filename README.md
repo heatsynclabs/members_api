@@ -68,18 +68,26 @@ You can build this container directly with: `docker build -t members_api .`
 You can run this container directly with: `docker run -it members_api /bin/sh`
 You'll then have to manually run commands like `npm install` or `npm run start` (see Dockerfile and docker-compose.yml for various assumptions and env vars we use during normal runtime.)
 
+## Database
+
+Under Docker, a single container runs two databases; `members_api_db_development` and `members_api_db_test`.
+The test database `members_api_db_test` is managed by Docker scripts, and is migrated up and down as part of each test run.
+The development database is migrated each time it is booted up.
+Migrations and data seeds against the development database may be run manually with the `./scripts/docker-exec.sh` script.
+
+  - `docker exec members_api npm run db_migrate_up`
+  - `docker exec members_api npm run db_seed`
+
 ## Tests
 
-To run tests or coverage, we use lab:
+To run tests or coverage, we use [lab](https://hapi.dev/module/lab/):
 
   - `npm run test`
   - `npm run coverage`
 
 Via Docker:
 
-  - `docker-compose build`
-  - `docker-compose run -e NODE_ENV=test members_api`
-  - `docker stop members_api_postgres && docker container rm members_api_postgres && docker volume rm members_api_db_data`
+  - `NODE_ENV=test docker compose run --rm members_api`
 
 ## Manual testing/usage
 

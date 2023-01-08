@@ -20,8 +20,8 @@ const url = require('url');
 const server = require('../../..');
 const knex = require('../../../knex');
 
-const { createMapRelations, destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
-const { users, events } = require('../../fixtures');
+const { createMapRelations, destroyRecords, getAuthToken } = require('../../fixture-client');
+const { events, users } = require('../../fixtures');
 
 lab.experiment('DELETE /events/', () => {
   let Authorization;
