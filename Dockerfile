@@ -14,9 +14,7 @@
 
 FROM node:16-alpine AS dev
 
-EXPOSE 3004 9229
-
-RUN apk update
+EXPOSE 3004
 
 WORKDIR /home/app
 

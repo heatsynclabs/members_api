@@ -17,20 +17,17 @@ const { expect } = require('code');
 const lab = exports.lab = require('lab').script();
 const url = require('url');
 
-const server = require('../../../');
+const server = require('../../..');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users } = require('../../fixtures');
+const knex = require('../../../knex');
 
 lab.experiment('GET /users/{user_id}', () => {
-  let user;
-  let user2;
   let Authorization;
 
   lab.before(async () => {
-    const data = await fixtures.create({ users });
-    user = data.users[0];
-    user2 = data.users[1];
-    const authRes = await getAuthToken(data.users[0]);
+    await knex('users').insert(users);
+    const authRes = await getAuthToken(users[0]);
     Authorization = authRes.token;
   });
 
@@ -39,21 +36,22 @@ lab.experiment('GET /users/{user_id}', () => {
   });
 
   lab.test('should return a user by id', async () => {
+    const user = await knex('users').offset(0).first('email', 'id');
     const options = {
       url: url.format(`/users/${user.id}`),
       method: 'GET',
       headers: { Authorization },
     };
 
-
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
     expect(res.result).to.be.an.object();
-    expect(res.result.email).to.equal(users[0].email);
+    expect(res.result.email).to.equal(user.email);
     expect(res.result).to.not.include('password');
   });
 
   lab.test('should error if requesting a user not authorized to view', async () => {
+    const user2 = await knex('users').offset(1).first('id');
     const options = {
       url: url.format(`/users/${user2.id}`),
       method: 'GET',
@@ -79,7 +77,6 @@ lab.experiment('GET /users/{user_id}', () => {
     expect(res.result).to.be.an.object();
   });
 
-
   lab.test('should error with invalid user_id', async () => {
     const options = {
       url: url.format('/users/notgood'),
@@ -92,6 +89,7 @@ lab.experiment('GET /users/{user_id}', () => {
     expect(res.result).to.be.an.object();
   });
   lab.test('should error if no auth token is found', async () => {
+    const user = await knex('users').offset(0).first('id');
     const options = {
       url: url.format(`/users/${user.id}`),
       method: 'GET',

@@ -21,7 +21,6 @@ const {
 
 const errors = require('./lib/errors');
 
-
 // TODO: We might be able to move this to Hapi scope functions on a per route basis!
 // This only gets called after a scope has matched a route scope
 module.exports = function handleRoles(request, h) {

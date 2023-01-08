@@ -21,7 +21,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/events',
-    handler: req => model.browse(req.query),
+    handler: (req) => model.browse(req.query),
     config: {
       auth: {
         strategies: ['auth', 'jwt'],
@@ -43,7 +43,7 @@ module.exports = [
         strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
-      handler: req => model.readCached(req.params.event_id),
+      handler: (req) => model.readCached(req.params.event_id),
       description: 'Gets a event',
       notes: 'Returns back the specified event object',
       tags: ['api'], // ADD THIS TAG
@@ -62,7 +62,7 @@ module.exports = [
         strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
-      handler: req => model.remove(req.params.event_id),
+      handler: (req) => model.remove(req.params.event_id),
       description: 'Deletes an Event',
       notes: 'Deletes an Event',
       tags: ['api'], // ADD THIS TAG
@@ -96,7 +96,7 @@ module.exports = [
   {
     method: 'PATCH',
     path: '/events/{event_id}',
-    handler: req => model.edit(req.params.event_id, req.payload),
+    handler: (req) => model.edit(req.params.event_id, req.payload),
     config: {
       auth: {
         strategies: ['auth', 'jwt'],

@@ -25,7 +25,7 @@ const oldbread = require('breadfruit')({
   pool: { min: 1, max: 7 }
 });
 
-const { pick, omit, forEach, cloneDeep } = require('lodash');
+const { pick, omit, forEach } = require('lodash');
 
 const userFields = [
   'id',
@@ -100,8 +100,6 @@ const paymentFields = [
 
 const newUsers = {};
 
-const oldData = {};
-
 async function run() {
   const users = await oldbread.raw(`
   select
@@ -116,9 +114,7 @@ async function run() {
 
   debug('users', users.length, 'contracts', contracts.length);
 
-  const userPromises = [];
-
-  for (let index = 0; index < users.length; index++) {
+  for (let index = 0; index < users.length; index += 1) {
     const user = users[index];
     let u = user;
     u.legacy_id = u.id;
@@ -131,28 +127,26 @@ async function run() {
     }
     u = omit(pick(u, userFields), 'id');
 
-    const existingUser = await bread.read('users', '*', {email: u.email});
+    const existingUser = await bread.read('users', '*', { email: u.email });
     let nu;
 
-    if(existingUser) {
+    if (existingUser) {
       console.log('EXISTING', u);
-      nu = await bread.edit('users', userFields, u, {id: existingUser.id});
+      nu = await bread.edit('users', userFields, u, { id: existingUser.id });
     } else {
       // console.log('NEW', u);
       nu = await bread.add('users', userFields, u);
     }
 
     if (user.admin) {
-      const newMem = await bread.add('memberships', ['user_id', 'group_id'], { user_id: nu.id, group_id: 'ADMIN' })
+      const newMem = await bread.add('memberships', ['user_id', 'group_id'], { user_id: nu.id, group_id: 'ADMIN' });
       debug('new membership', nu.name, newMem);
     }
 
     newUsers[nu.legacy_id] = nu;
 
     debug('new user', nu, user);
-    
   }
-
 
   forEach(users, (user) => {
     forEach(user.user_cards, async (userCard) => {
@@ -178,7 +172,7 @@ async function run() {
         }
         uc.cert_id = userCert.certification_id;
         uc = pick(uc, userCertFields);
-        const nuc = await bread.add('user_certifications', userCertFields, uc);
+        await bread.add('user_certifications', userCertFields, uc);
       }
     });
   });
@@ -214,7 +208,6 @@ async function run() {
     const nc = await bread.add('contracts', contractFields, c);
     debug('new contract', nc, contract);
   });
-
 }
 
 run();

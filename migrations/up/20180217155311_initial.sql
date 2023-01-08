@@ -377,11 +377,6 @@ WHERE
 
 
 -- seed data
-INSERT INTO users (id, password,email,name,is_validated,member_level) VALUES ('badaf5f6-cdc8-4be7-af46-c5f78e748a55', crypt('Testing1!', gen_salt('bf',10)),'admin@example.com','Admin',true,100);
-INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'gobie@example.com','Gobie McDaniels',true,5);
-INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'jimbo@example.com','Jimbo Fargo',false,1);
-INSERT INTO users (password,email,name,is_validated,member_level) VALUES (crypt('Testing1!', gen_salt('bf',10)),'hardy@example.com','Hardy Bridle',true,10);
-
 INSERT INTO payment_methods (id) VALUES ('CASH');
 INSERT INTO payment_methods (id) VALUES ('PAYPAL');
 INSERT INTO groups (id, description) VALUES ('ADMIN', 'Admin users');
@@ -400,4 +395,3 @@ INSERT INTO certifications (id, name, description, created_at, updated_at) VALUE
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(12, 'Laser Cutter (small)', 'Managed by Milton', '2013-01-25 16:19:24.331172', '2014-02-23 06:08:12.476114');
 ALTER SEQUENCE certifications_id_seq RESTART WITH 12;
 
-INSERT INTO events (id,name, description, start_date, end_date, frequency, location, created_by) VALUES('4909f5f6-cdc8-4be7-af46-c5f78e748a6a','Laser Class', 'Join this class!' || chr(13) || chr(10) || 'It''s fun!', '2019-10-11 13:00:00', '2019-10-11 15:00:00', 'weekly', 'HeatSync Labs', 'badaf5f6-cdc8-4be7-af46-c5f78e748a55');

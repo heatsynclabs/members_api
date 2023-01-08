@@ -18,7 +18,6 @@ const model = breadModel({
   }
 });
 
-
 // id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
 // password TEXT,
 // email citext UNIQUE,
@@ -50,6 +49,5 @@ const model = breadModel({
 // created_at TIMESTAMPTZ DEFAULT NOW(),
 // updated_at TIMESTAMPTZ,
 // deleted_at TIMESTAMPTZ
-
 
 module.exports = model;
