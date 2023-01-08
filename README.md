@@ -75,6 +75,12 @@ To run tests or coverage, we use lab:
   - `npm run test`
   - `npm run coverage`
 
+Via Docker:
+
+  - `docker-compose build`
+  - `docker-compose run -e NODE_ENV=test members_api`
+  - `docker stop members_api_postgres && docker container rm members_api_postgres && docker volume rm members_api_db_data`
+
 ## Manual testing/usage
 
 Assuming your docker and/or node are on port 3004, you can run:
