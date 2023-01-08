@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const model = require('../models/all_users');
-const { getCreds, isAdmin } = require('../lib/util');
 const { map, omit } = require('lodash');
 const boom = require('boom');
 const Joi = require('joi');
+const { getCreds, isAdmin } = require('../lib/util');
+const model = require('../models/all_users');
 
 const strategies = ['auth', 'jwt'];
 const omitFields = ['payment_method_id', 'payment_account', 'password'];

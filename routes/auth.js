@@ -28,7 +28,7 @@ const auth = [
   {
     method: 'POST',
     path: '/auth',
-    handler: req => login(req.payload.email, req.payload.password),
+    handler: (req) => login(req.payload.email, req.payload.password),
     config: {
       auth: false,
       description: 'Log In',

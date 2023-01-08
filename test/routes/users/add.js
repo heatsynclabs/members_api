@@ -20,7 +20,7 @@ const url = require('url');
 const { omit } = require('lodash');
 
 const bread = require('../../../lib/bread');
-const server = require('../../../');
+const server = require('../../..');
 const { destroyRecords, destroyTokens } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 

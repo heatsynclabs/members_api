@@ -19,7 +19,7 @@ const url = require('url');
 const { omit } = require('lodash');
 
 const server = require('../../..');
-const { createMapRelations, destroyRecords, getAuthToken } = require('../../fixture-client');
+const { createMapRelations, destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 const knex = require('../../../knex');
 

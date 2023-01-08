@@ -47,10 +47,11 @@ const user = {
   website_url: Joi.string().max(255)
 };
 
-const required = Object.assign({}, user, {
+const required = {
+  ...user,
   password: Joi.string().required(),
   email: Joi.string().email().required(),
-});
+};
 
 module.exports = [
   {
@@ -81,7 +82,7 @@ module.exports = [
         strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
-      handler: req => byIdCached(req.params.user_id),
+      handler: (req) => byIdCached(req.params.user_id),
       description: 'Gets a user',
       notes: 'Returns back the specified user object',
       tags: ['api'], // ADD THIS TAG
@@ -100,7 +101,7 @@ module.exports = [
         strategies: ['auth', 'jwt'],
         scope: ['USER'],
       },
-      handler: req => del(req.params.user_id),
+      handler: (req) => del(req.params.user_id),
       description: 'Deletes a User',
       notes: 'Deletes a user',
       tags: ['api'], // ADD THIS TAG
@@ -155,7 +156,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/users',
-    handler: req => browse(req.query),
+    handler: (req) => browse(req.query),
     config: {
       auth: {
         strategies: ['auth', 'jwt'],
@@ -172,7 +173,7 @@ module.exports = [
   {
     method: 'POST',
     path: '/users',
-    handler: req => add(req.payload),
+    handler: (req) => add(req.payload),
     config: {
       auth: false,
       description: 'Add A User',
@@ -186,7 +187,7 @@ module.exports = [
   {
     method: 'PUT',
     path: '/users/validate/{token}',
-    handler: req => validate(req.params.token),
+    handler: (req) => validate(req.params.token),
     config: {
       auth: false,
       description: 'Validate User',
@@ -202,7 +203,7 @@ module.exports = [
   {
     method: 'PUT',
     path: '/users/reset/{token}',
-    handler: req => resetPassword(req.params.token, req.payload.password),
+    handler: (req) => resetPassword(req.params.token, req.payload.password),
     config: {
       auth: false,
       description: 'Resets Password',
@@ -222,7 +223,7 @@ module.exports = [
   {
     method: 'POST',
     path: '/users/reset',
-    handler: req => resetRequest(req.payload.email),
+    handler: (req) => resetRequest(req.payload.email),
     config: {
       auth: false,
       description: 'Request Password Reset',

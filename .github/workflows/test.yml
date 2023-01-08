@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - develop
 
 jobs:
   test:
@@ -26,5 +26,8 @@ jobs:
       uses: bahmutov/npm-install@v1
     -
       name: Run tests
-      run: docker-compose run test
-      
+      run: docker-compose run -e NODE_ENV=test members_api
+
+    -
+      name: Cleanup
+      run: docker stop members_api_postgres && docker container rm members_api_postgres && docker volume rm members_api_db_data

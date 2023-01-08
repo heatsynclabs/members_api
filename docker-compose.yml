@@ -69,22 +69,6 @@ services:
       INBUCKET_POP3_ADDR: "0.0.0.0:10110"
       INBUCKET_SMTP_ADDR: "0.0.0.0:10025"
 
-  test:
-    container_name: "test"
-    depends_on:
-      members_api_postgres:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: "postgres://postgres:postgres@members_api_postgres:5432/hsl_dev"
-      JWT_KEY: "some random key"
-      NODE_ENV: "test"
-      NPMINSTALL: 1
-    build:
-      target: dev
-      context: .
-    volumes:
-      - .:/home/app
-
 volumes:
   db_data:
     driver: local
