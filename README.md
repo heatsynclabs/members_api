@@ -4,6 +4,8 @@
 
 This is the API component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info and general readme information.
 
+See the CONTRIBUTING file for information on helping out, or our [Wiki](https://wiki.heatsynclabs.org/wiki/HSL_API) for project governance.
+
 ## Normal Docker Dev Usage
 
 ### Prerequisites
