@@ -24,6 +24,7 @@ then
   export NODE_PORT=$PORT
   echo "Setting NODE_PORT=$PORT based on PORT"
 fi
+
 if [[ $NPMINSTALL == 1 ]]
 then
   npm install
@@ -42,6 +43,4 @@ then
   npm run db_migrate_up
   npm run db_clear
   npm run test
-else
-  echo "Improper NODE_ENV=$NODE_ENV, stopping"
 fi
