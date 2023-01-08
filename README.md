@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-[![Build Status](https://travis-ci.com/heatsynclabs/members_api.svg?branch=master)](https://travis-ci.com/heatsynclabs/members_api)
+[![Lint](https://github.com/heatsynclabs/members_api/actions/workflows/lint.yml/badge.svg)](https://github.com/heatsynclabs/members_api/actions/workflows/lint.yml)
 
 This is the API component of the [members_app](https://github.com/heatsynclabs/members_app). See that repo for full project info and general readme information.
 
@@ -24,7 +24,7 @@ docker compose up -d members_api
 
 ### Instructions
 
-**Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**
+<!--**Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**-->
 
 If you need to override some of the default environment variables or ports in from the docker-compose.yml file, you can create a docker-compose.override.yml and add your own environment variables or ports there. This file is automatically used by docker-compose and is ignored by git, so you can safely add it to your local repo.
 
@@ -60,7 +60,7 @@ To view this container's website from the docker host machine: `http://localhost
 
 To access the database directly, use your docker host's `psql` or `pgadmin` client on `localhost:5432` (assuming you've forwarded the port in docker-compose.yml)
 
-Note that this app is just the API, so again if you want a working app you probably want to check out the `members_app` repo.
+<!--Note that this app is just the API, so again if you want a working app you probably want to check out the `members_app` repo.-->
 
 ### Debugging Docker Dev Usage
 
