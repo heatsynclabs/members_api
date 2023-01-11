@@ -47,4 +47,6 @@ const fixture = [
   }),
 ];
 
+console.log('test fixtures', fixture);
+
 module.exports = fixture;

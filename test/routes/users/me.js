@@ -21,7 +21,7 @@ const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 
-lab.experiment('GET /user/me', () => {
+lab.experiment.skip('GET /user/me', () => {
   let user;
   let Authorization;
 

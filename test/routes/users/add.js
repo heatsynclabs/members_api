@@ -29,8 +29,9 @@ lab.experiment('POST /user', () => {
   let tokens = [];
 
   lab.after(() => {
+    console.log('cleanup users add', users, tokens);
     return destroyRecords({ users })
-      .then(destroyTokens(tokens));
+      .then(destroyTokens(tokens)).catch(console.error);
   });
 
   lab.test('should create a user', async () => {

@@ -12,18 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const config = {
-  client: 'postgresql',
-  connection: process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/hsl',
-  pool: {
-    min: 1,
-    max: 7,
+const dbs = {
+  production: {
+    client: 'postgresql',
+    connection: process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/hsl',
+    pool: {
+      min: 1,
+      max: 7,
+    },
+    seeds: {
+      directory: './migrations/seed'
+    }
   },
-  seeds: {
-    directory: './migrations/seed'
-  }
+  test: {
+    client: 'postgresql',
+    connection: process.env.TEST_DATABASE_URL || 'postgres://postgres@localhost:5432/hsl-test',
+    pool: {
+      min: 1,
+      max: 7,
+    },
+    seeds: {
+      directory: './migrations/seed'
+    }
+  },
 };
 
-// console.log('knex', config);
+const config = dbs[process.env.NODE_ENV] || dbs.production;
 
 module.exports = config;

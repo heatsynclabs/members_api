@@ -9,8 +9,10 @@
     "start": "knex migrate:latest && node index.js",
     "inspect": "nodemon --inspect index.js",
     "develop": "DEBUG=error*,general* nodemon --trace-warnings index",
-    "test": "NODE_ENV=test lab -v --leaks",
+    "test": "NODE_ENV=test npm run clear; NODE_ENV=test lab -v -l",
+    "test-migrations": "NODE_ENV=test npm run down; NODE_ENV=test npm run up",
     "lint": "eslint . --ext .js",
+    "clear": "npm run down && npm run up",
     "coverage": "NODE_ENV=test nyc cover lab -v --leaks",
     "up": "knex migrate:latest",
     "down": "knex migrate:rollback"

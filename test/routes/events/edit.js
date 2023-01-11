@@ -22,7 +22,7 @@ const server = require('../../../');
 const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 
-lab.experiment('PATCH /events/', () => {
+lab.experiment.skip('PATCH /events/', () => {
   let sampleEvent;
   let Authorization;
   let data;

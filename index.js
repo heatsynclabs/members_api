@@ -86,4 +86,6 @@ ws.createServer({ server: server.listener }, mqtt.handle);
 // Don't worry be hapi
 start();
 
+console.log(`http server documentation at http://localhost:${config.connection.port}/documentation`);
+
 module.exports = server;

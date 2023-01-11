@@ -33,6 +33,7 @@ lab.experiment('GET /users/', () => {
   });
 
   lab.after(() => {
+    console.log('cleanup browse users', users);
     return destroyRecords({ users });
   });
 
