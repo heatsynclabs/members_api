@@ -18,7 +18,7 @@ const lab = exports.lab = require('lab').script();
 const url = require('url');
 
 const server = require('../../..');
-const { createMapRelations, destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { createMapRelations, destroyRecords, getAuthToken } = require('../../fixture-client');
 const knex = require('../../../knex');
 
 const { users, events } = require('../../fixtures');

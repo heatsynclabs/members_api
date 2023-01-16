@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const config = {
+const config = require('./config');
+
+module.exports = {
   client: 'postgresql',
-  connection: process.env.DATABASE_URL || 'postgres://postgres@localhost:5432/hsl',
+  connection: config.databaseUrl,
   pool: {
     min: 1,
     max: 7,
   },
   seeds: {
-    directory: './migrations/seed'
-  }
+    directory: './migrations/seed',
+  },
 };
-
-// console.log('knex', config);
-
-module.exports = config;

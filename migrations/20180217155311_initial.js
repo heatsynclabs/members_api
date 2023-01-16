@@ -13,26 +13,24 @@
 // limitations under the License.
 
 const fs = require('fs');
-const knex = require('../knex')
 
 const up = fs.readFileSync('./migrations/up/20180217155311_initial.sql', 'utf8');
 const down = fs.readFileSync('./migrations/down/20180217155311_initial.sql', 'utf8');
 
-
-exports.up = async function(knexing, success) {
+exports.up = async function (knex) {
   try {
-    await knex.raw(up)
+    await knex.raw(up);
   } catch (err) {
-    console.log('err', err);
+    console.error('err', err);
     return err;
   }
 };
 
-exports.down = async function(success, error) {
+exports.down = async function (knex) {
   try {
-    await knex.raw(down)
+    await knex.raw(down);
   } catch (err) {
-    console.log('err', err);
+    console.error('err', err);
     return err;
   }
 };
