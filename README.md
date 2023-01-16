@@ -76,10 +76,13 @@ You can build this container directly with: `docker build -t members_api .`
 You can run this container directly with: `docker run -it members_api /bin/sh`
 You'll then have to manually run commands like `npm install` or `npm run start` (see Dockerfile and docker-compose.yml for various assumptions and env vars we use during normal runtime.)
 
+<<<<<<< HEAD
 ### Emails/SMTP
 
 [Inbucket](https://inbucket.org) is running on http://localhost:10001 by default in dev mode so that you can receive emails without actually sending anything.
 
+=======
+>>>>>>> chore-split-db
 ## Database
 
 Under Docker, a single container runs two databases; `members_api_db_development` and `members_api_db_test`.
