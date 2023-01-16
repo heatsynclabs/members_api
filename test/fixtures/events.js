@@ -12,39 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+function capitalize(word) 
+{
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
 const { Factory } = require('rosie');
+const { faker } = require('@faker-js/faker');
 
 const event = new Factory();
 
 event
-  .attr('id')
+  // .attr('id')
   .attr('name')
   // .attr('description')
   .attr('start_date')
   // .attr('end_date')
   .attr('frequency')
-  .attr('location');
+  .attr('location')
+  .attr('created_by');
 
 const fixture = [
   event.build({
     // id: '44fecd99-3400-449a-b13c-61ad7ffd1d11',
-    name: 'Laser Class',
+    name: `${capitalize(faker.word.verb())} ${capitalize(faker.word.noun())}`,
     // description: 'Join this class!\r\nIt\'s fun!',
-    start_date: new Date('2019-10-11 13:00:00'),
+    start_date: faker.date.soon(),
     // end_date: '2019-10-11 15:00:00',
     frequency: 'weekly',
     location: 'HeatSync Labs',
-    created_by: 'users:0',
+    // created_by: 'users:0',
   }),
   event.build({
     // id: '44fecd99-3400-449a-b13c-61ad7ffd1d11',
-    name: '3D Printer Class',
+    name: `${capitalize(faker.word.verb())} ${capitalize(faker.word.noun())}`,
     // description: 'Join this class!\r\nIt\'s fun!',
-    start_date: new Date('2019-11-12 14:00:00'),
+    start_date: faker.date.soon(),
     // end_date: '2019-10-11 15:00:00',
     frequency: 'biweekly',
     location: 'HeatSync Labs',
-    created_by: 'users:0',
+    // created_by: 'users:0',
   }),
 ];
 

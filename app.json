@@ -1,0 +1,46 @@
+{
+  "name": "Members API",
+  "description": "API for the Members App",
+  "repository": "https://github.com/heatsynclabs/members_api",
+  "env": {
+    "NODE_ENV": {
+      "description": "Run the app in production/development/test",
+      "value": "development"
+    },
+    "JWT_KEY": {
+      "description": "Encryption key for JSON Web Tokens",
+      "value": "some random key"
+    },
+    "PGSSLMODE": {
+      "description": "How to run Postgres SSL",
+      "value": "no-verify"
+    },
+    "SENDGRID_API_KEY": {
+      "description": "API for sending emails when local methods are unavailable"
+    },
+    "ADMIN_EMAIL": {
+      "description": "Address to send email from",
+      "value": "info@heatsynclabs.org"
+    },
+    "SERVER_URL": {
+      "description": "Base URL of this API to link users to when sending them login emails, no trailing slash"
+    },
+    "DOMAIN_LOCATION": {
+      "description": "Base URL of the UI to redirect users on login, no trailing slash"
+    },
+    "DOMAIN_LOCATION_DEV": {
+      "description": "Base URL of the UI to redirect users in dev mode, no trailing slash"
+    },
+    "DEV_COOKIES": {
+      "description": "1 or 0, to set cookie security weak or strong"
+    },
+    "DEV_SAME_SITE": {
+      "description": "1 or 0, to set cookie same-site protection lax or none"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql"
+    }
+  ]
+}

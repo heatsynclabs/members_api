@@ -17,6 +17,6 @@ module.exports = {
   users: require('./users'),
   events: require('./events'),
   time_token: require('./time_token'),
-  tokens: require('./tokens')
+  tokens: require('./tokens'),
   /* eslint-enable */
 };

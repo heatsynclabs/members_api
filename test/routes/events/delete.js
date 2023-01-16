@@ -20,29 +20,27 @@ const url = require('url');
 const server = require('../../..');
 const knex = require('../../../knex');
 
-const { createMapRelations, destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { createMapRelations, destroyRecords, getAuthToken, fixtures, makeUserIdAdmin } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 
 lab.experiment('DELETE /events/', () => {
   let Authorization;
+  let myUserId;
+  let memberships;
+  let events;
 
   lab.before(async () => {
-    await knex('users').insert(users);
-    await knex('events').insert(await createMapRelations(['created_by'])(events));
+    let insertedUserIds = await knex('users').insert(users).returning(['id']);
+    myUserId = insertedUserIds[0]['id'];
+
+    await makeUserIdAdmin(myUserId);
+
     const authRes = await getAuthToken(users[0]);
     Authorization = authRes.token;
   });
 
-  lab.after(async () => {
-    const usersToDestroy = await knex('users').select('email', 'id');
-    const eventsToDestroy = await knex('events')
-      .select('id', 'created_by')
-      .where((builder) => builder.whereIn('created_by', usersToDestroy.map(({ id }) => id)));
-
-    await destroyRecords({
-      users: usersToDestroy,
-      events: eventsToDestroy
-    });
+  lab.after(() => {
+    return destroyRecords({ memberships }).then(destroyRecords({ events })).then(destroyRecords({ users }));
   });
 
   lab.test('should successfully delete an event', async () => {

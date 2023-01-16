@@ -19,41 +19,38 @@ const url = require('url');
 const { omit } = require('lodash');
 
 const server = require('../../..');
-const { createMapRelations, destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { createMapRelations, destroyRecords, getAuthToken, fixtures, makeUserIdAdmin } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 const knex = require('../../../knex');
 
-lab.experiment('PATCH /events/', () => {
+lab.experiment('PUT /events/', () => {
   let Authorization;
 
   lab.before(async () => {
-    await knex('users').insert(users);
-    await knex('events').insert(await createMapRelations(['created_by'])(events));
+    let insertedUserIds = await knex('users').insert(users).returning(['id']);
+    myUserId = insertedUserIds[0]['id'];
+    await knex('events').insert(events);
+
+    await makeUserIdAdmin(myUserId);
+
     const authRes = await getAuthToken(users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(async () => {
-    const usersToDestroy = await knex('users').select('email', 'id');
-    const eventsToDestroy = await knex('events')
-      .select('id', 'created_by')
-      .where((builder) => builder.whereIn('created_by', usersToDestroy.map(({ id }) => id)));
-
-    await destroyRecords({
-      users: usersToDestroy,
-      events: eventsToDestroy
-    });
+    return destroyRecords({ memberships }).then(destroyRecords({ events })).then(destroyRecords({ users }));
   });
 
   lab.test('should successfully edit an event', async () => {
     const eventsToEdit = await knex('events');
+    console.log(eventsToEdit);
     eventsToEdit[0].name = "fookie";
 
     const options = {
       url: url.format(`/events/${eventsToEdit[0].id}`),
-      method: 'PATCH',
+      method: 'PUT',
       headers: { Authorization },
-      payload: omit(eventsToEdit[0], ['id', 'created_by']),
+      payload: omit(eventsToEdit[0], ['id', 'created_by', 'created_at', 'updated_at', 'deleted_at', 'is_deleted']),
     };
 
     const res = await server.inject(options);

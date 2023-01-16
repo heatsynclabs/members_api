@@ -19,7 +19,7 @@ const Pack = require('./package.json');
 const knexFile = require('./knexfile');
 
 const jwt = {
-  password: process.env.JWT_KEY,
+  password: process.env.JWT_KEY || 'some random key',
   signOptions: {},
 };
 

@@ -20,6 +20,7 @@ const url = require('url');
 const server = require('..');
 const { connection } = require('../knexfile');
 const knex = require('../knex');
+const { Factory } = require('rosie');
 
 const fixturesConfig = {
   client: 'pg',
@@ -30,17 +31,20 @@ const fixtures = new Fixtures(fixturesConfig);
 
 const tableDeleteOrder = [
   'time_token',
+  'memberships',
   'events',
   'users',
 ];
 
 const tableToDeleteKey = {
   time_token: 'id',
-  events: 'id',
+  memberships: 'user_id',
+  events: 'name',
   users: 'email'
 };
 
 async function mapRelation(relationValue) {
+  console.warn("mapRelation:",relationValue);
   const [tableName, offset] = relationValue.split(':');
   return (await knex(tableName).offset(offset).first('id')).id;
 }
@@ -50,6 +54,7 @@ async function mapRelation(relationValue) {
 // collection of untransformed fixtures and replaces the `created_by` field
 // of each one with the corresponding user id from the database.
 function createMapRelations(relationNames) {
+  console.warn("Mapping relation:",relationNames);
   return async function mapRelations(collection) {
     return Promise.all(collection.map(async (item) => ({
       ...item,
@@ -84,6 +89,8 @@ module.exports = {
       const ids = values(table)[0];
       const key = tableToDeleteKey[tableName];
 
+      console.log("deleting", tableName);
+
       return knex(tableName)
         .whereIn(key, ids)
         .del()
@@ -93,6 +100,20 @@ module.exports = {
           return Promise.reject(err);
         });
     });
+  },
+  async makeUserIdAdmin(userId) {
+    const membership = new Factory();
+    membership
+      .attr('user_id')
+      .attr('group_id');
+    memberships = [
+      // user 1 will be an admin
+      membership.build({
+        user_id: userId,
+        group_id: 'ADMIN'
+      }),
+    ];
+    await knex('memberships').insert(memberships);
   },
   async destroyTokens(userIds) {
     return promise.each(userIds, (id) => knex('time_token')

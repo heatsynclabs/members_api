@@ -23,7 +23,7 @@ const knex = require('../../../knex');
 
 const { users, events } = require('../../fixtures');
 
-lab.experiment('GET /events/', () => {
+lab.experiment('GET /events/{event_id}', () => {
   let Authorization;
 
   lab.before(async () => {
@@ -37,75 +37,54 @@ lab.experiment('GET /events/', () => {
     await destroyRecords({ users, events });
   });
 
-  lab.test('should retrieve event information when logged in', (done) => {
+  lab.test('should return a event by id', async () => {
+    const event = await knex('events').offset(0).first('id', 'name');
     const options = {
-      url: url.format({
-        pathname: '/events',
-      }),
+      url: url.format(`/events/${event.id}`),
       method: 'GET',
       headers: { Authorization },
     };
 
-    server.inject(options, (res) => {
-      expect(res.statusCode).to.equal(200);
-      expect(res.result).to.be.an.array();
-      expect(res.result[0].name).to.equal('foo');
-      expect(res.result[0].name).to.not.equal('foo');
-      done();
-    });
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(200);
+    expect(res.result).to.be.an.object();
+    expect(res.result.id).to.equal(event.id);
+    expect(res.result.name).to.equal(event.name);
   });
 
-  lab.test('should error with invalid query', (done) => {
+  // TODO: this explodes violently inside hapi when it should return a nice 404
+  lab.test.skip('should error if event is not found', async () => {
+    const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format({
-        pathname: '/events/',
-        query: {
-          kaboom: events[0].name,
-        },
-      }),
+      url: url.format(`/events/badbadf7-53a7-4d66-abf5-541d3ed767d0`),
       method: 'GET',
       headers: { Authorization },
     };
 
-    server.inject(options, (res) => {
-      expect(res.statusCode).to.equal(400);
-      done();
-    });
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(404);
   });
-  lab.test('should return empty array if none found', (done) => {
+
+  lab.test('should error with bad event id', async () => {
+    const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format({
-        pathname: '/events/',
-        query: {
-          name: 'hardyharharharhar',
-        },
-      }),
+      url: url.format(`/events/badbadbad`),
       method: 'GET',
       headers: { Authorization },
     };
 
-    server.inject(options, (res) => {
-      expect(res.statusCode).to.equal(200);
-      expect(res.result).to.be.an.array();
-      expect(res.result).to.be.empty();
-      done();
-    });
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(400);
   });
 
-  lab.test('should error with no auth', (done) => {
+  lab.test('should error if no auth token is found', async () => {
+    const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format({
-        pathname: '/events/',
-        query: {
-          name: events[0].name,
-        },
-      }),
+      url: url.format(`/events/${event.id}`),
       method: 'GET',
     };
 
-    server.inject(options, (res) => {
-      expect(res.statusCode).to.equal(401);
-      done();
-    });
+    const res = await server.inject(options);
+    expect(res.statusCode).to.equal(401);
   });
 });

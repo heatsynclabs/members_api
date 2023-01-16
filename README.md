@@ -26,7 +26,7 @@ docker compose up -d members_api
 
 <!--**Consider following the Docker instructions in the `members_app` repo instead of here, to get a full environment going instead of piecemeal with just the API.**-->
 
-If you need to override some of the default environment variables or ports in from the docker-compose.yml file, you can create a docker-compose.override.yml and add your own environment variables or ports there. This file is automatically used by docker-compose and is ignored by git, so you can safely add it to your local repo.
+If you need to override some of the default environment variables or ports in from the docker-compose.yml file, you can create a docker-compose.override.yml and add your own environment variables or ports there.
 
   > **Warning, this docker image is intended for dev mode** attached to a destroyable Postgres server and npm-install-able project folder. ***Running this in critical/prod environments is strongly discouraged without lots of testing!!!***
 
@@ -68,6 +68,10 @@ You can build this container directly with: `docker build -t members_api .`
 You can run this container directly with: `docker run -it members_api /bin/sh`
 You'll then have to manually run commands like `npm install` or `npm run start` (see Dockerfile and docker-compose.yml for various assumptions and env vars we use during normal runtime.)
 
+### Emails/SMTP
+
+[Inbucket](https://inbucket.org) is running on http://localhost:10001 by default in dev mode so that you can receive emails without actually sending anything.
+
 ## Tests
 
 To run tests or coverage, we use lab:
@@ -78,8 +82,14 @@ To run tests or coverage, we use lab:
 Via Docker:
 
   - `docker-compose build`
-  - `docker-compose run -e NODE_ENV=test members_api`
+  - `docker-compose run --rm -e NODE_ENV=test members_api`
   - `docker stop members_api_postgres && docker container rm members_api_postgres && docker volume rm members_api_db_data`
+
+  or one specific test only:
+
+  - `docker-compose build`
+  - `docker-compose run --rm -e NODE_ENV=test members_api npm run up` (if postgres hasn't been set up yet)
+  - `docker-compose run --rm -e NODE_ENV=test members_api npm run test test/routes/events/browse.js`
 
 ## Manual testing/usage
 
@@ -104,6 +114,6 @@ Create an event:
 Delete an event:
   `curl -X DELETE -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/events/YOUR_EVENT_ID_HERE`
 
-## Emails/SMTP
+## Heroku Deploy
 
-[Inbucket](https://inbucket.org) is running on http://localhost:10001 by default in dev mode so that you can receive emails without actually sending anything.
+- See `app.json`
