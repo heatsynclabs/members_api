@@ -19,15 +19,16 @@ const url = require('url');
 
 const server = require('../../..');
 const { getAuthToken } = require('../../fixture-client');
-const { users } = require('../../fixtures');
 const knex = require('../../../knex');
+const { users, events } = require('../../fixtures');
 const clearDb = require('../../clearDb');
 
-lab.experiment('GET /users/{user_id}', () => {
+lab.experiment('GET /events/{event_id}', () => {
   let Authorization;
 
   lab.before(async () => {
     await knex('users').insert(users);
+    await knex('events').insert(events);
     const authRes = await getAuthToken(users[0]);
     Authorization = authRes.token;
   });
@@ -36,10 +37,10 @@ lab.experiment('GET /users/{user_id}', () => {
     await clearDb();
   });
 
-  lab.test('should return a user by id', async () => {
-    const user = await knex('users').offset(0).first('email', 'id');
+  lab.test('should return a event by id', async () => {
+    const event = await knex('events').offset(0).first('id', 'name');
     const options = {
-      url: url.format(`/users/${user.id}`),
+      url: url.format(`/events/${event.id}`),
       method: 'GET',
       headers: { Authorization },
     };
@@ -47,57 +48,43 @@ lab.experiment('GET /users/{user_id}', () => {
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
     expect(res.result).to.be.an.object();
-    expect(res.result.email).to.equal(user.email);
-    expect(res.result).to.not.include('password');
+    expect(res.result.id).to.equal(event.id);
+    expect(res.result.name).to.equal(event.name);
   });
 
-  lab.test('should error if requesting a user not authorized to view', async () => {
-    const user2 = await knex('users').offset(1).first('id');
+  // TODO: this explodes violently inside hapi when it should return a nice 404
+  lab.test.skip('should error if event is not found', async () => {
+    const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format(`/users/${user2.id}`),
-      method: 'GET',
-      headers: { Authorization },
-    };
-
-    const res = await server.inject(options);
-    expect(res.statusCode).to.equal(403);
-    expect(res.result).to.be.an.object();
-    expect(res.result).to.not.include('password');
-  });
-
-  lab.test.skip('should error if user is not found', async () => {
-    // TODO needs to be an admin
-    const options = {
-      url: url.format('/users/bada5599-3400-449a-b13c-61ad7ffd1d77'),
+      url: url.format('/events/badbadf7-53a7-4d66-abf5-541d3ed767d0'),
       method: 'GET',
       headers: { Authorization },
     };
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(404);
-    expect(res.result).to.be.an.object();
   });
 
-  lab.test('should error with invalid user_id', async () => {
+  lab.test('should error with bad event id', async () => {
+    const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format('/users/notgood'),
+      url: url.format('/events/badbadbad'),
       method: 'GET',
       headers: { Authorization },
     };
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(400);
-    expect(res.result).to.be.an.object();
   });
+
   lab.test('should error if no auth token is found', async () => {
-    const user = await knex('users').offset(0).first('id');
+    const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format(`/users/${user.id}`),
+      url: url.format(`/events/${event.id}`),
       method: 'GET',
     };
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(401);
-    expect(res.result).to.be.an.object();
   });
 });

@@ -19,45 +19,43 @@ const url = require('url');
 const { omit } = require('lodash');
 
 const server = require('../../..');
-const { createMapRelations, destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { getAuthToken, makeUserIdAdmin } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 const knex = require('../../../knex');
+const clearDb = require('../../clearDb');
 
-lab.experiment('PATCH /events/', () => {
+lab.experiment('PUT /events/', () => {
   let Authorization;
 
   lab.before(async () => {
-    await knex('users').insert(users);
-    await knex('events').insert(await createMapRelations(['created_by'])(events));
+    const insertedUserIds = await knex('users').insert(users).returning(['id']);
+    const myUserId = insertedUserIds[0].id;
+    await knex('events').insert(events);
+
+    await makeUserIdAdmin(myUserId);
+
     const authRes = await getAuthToken(users[0]);
     Authorization = authRes.token;
   });
 
   lab.after(async () => {
-    const usersToDestroy = await knex('users').select('email', 'id');
-    const eventsToDestroy = await knex('events')
-      .select('id', 'created_by')
-      .where((builder) => builder.whereIn('created_by', usersToDestroy.map(({ id }) => id)));
-
-    await destroyRecords({
-      users: usersToDestroy,
-      events: eventsToDestroy
-    });
+    await clearDb();
   });
 
   lab.test('should successfully edit an event', async () => {
-    const sampleEvent = await knex('events').first('id', 'is_deleted');
-    sampleEvent.name = 'fookie';
+    const eventsToEdit = await knex('events');
+    eventsToEdit[0].name = 'fookie';
+
     const options = {
-      url: url.format(`/events/${sampleEvent.id}`),
-      method: 'PATCH',
+      url: url.format(`/events/${eventsToEdit[0].id}`),
+      method: 'PUT',
       headers: { Authorization },
-      payload: omit(sampleEvent, ['id', 'created_by']),
+      payload: omit(eventsToEdit[0], ['id', 'created_by', 'created_at', 'updated_at', 'deleted_at', 'is_deleted']),
     };
 
     const res = await server.inject(options);
     expect(res.statusCode).to.equal(200);
-    expect(res.result.id).to.equal(sampleEvent.id);
+    expect(res.result.id).to.equal(eventsToEdit[0].id);
     expect(res.result.name).to.equal('fookie');
   });
 });
