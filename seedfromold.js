@@ -131,7 +131,6 @@ async function run() {
     let nu;
 
     if (existingUser) {
-      console.log('EXISTING', u);
       nu = await bread.edit('users', userFields, u, { id: existingUser.id });
     } else {
       // console.log('NEW', u);

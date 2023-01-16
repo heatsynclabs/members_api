@@ -54,7 +54,6 @@ lab.experiment('GET /events/{event_id}', () => {
 
   // TODO: this explodes violently inside hapi when it should return a nice 404
   lab.test.skip('should error if event is not found', async () => {
-    const event = await knex('events').offset(0).first('id');
     const options = {
       url: url.format('/events/badbadf7-53a7-4d66-abf5-541d3ed767d0'),
       method: 'GET',
@@ -66,7 +65,6 @@ lab.experiment('GET /events/{event_id}', () => {
   });
 
   lab.test('should error with bad event id', async () => {
-    const event = await knex('events').offset(0).first('id');
     const options = {
       url: url.format('/events/badbadbad'),
       method: 'GET',

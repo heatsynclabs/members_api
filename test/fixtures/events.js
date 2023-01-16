@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function capitalize(word) 
-{
-    return word.charAt(0).toUpperCase() + word.slice(1);
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
 const { Factory } = require('rosie');

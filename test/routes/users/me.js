@@ -19,7 +19,7 @@ const url = require('url');
 const knex = require('../../../knex');
 
 const server = require('../../..');
-const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { destroyRecords, getAuthToken } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 
 lab.experiment('GET /user/me', () => {
