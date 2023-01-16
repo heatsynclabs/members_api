@@ -11,6 +11,7 @@ See the CONTRIBUTING file for information on helping out, or our [Wiki](https://
 ### Prerequisites
 
 - Docker Compose v2 or higher (run `docker compose version` or `docker-compose version`)
+- If using your own database server vs the builtin Docker, Postgres 15.
 
 ### ARM vs x86 Considerations
 
@@ -50,11 +51,18 @@ Review the `Dockerfile` so you know what's about to be booted. For example, the 
 Create the docker container for the api and database:
 `docker compose up`
 
-To access the container's shell prompt:
+To access the container's shell prompt for the following npm commands:
 `docker exec -it members_api /bin/sh`
 
-To create basic db tables from within container shell:
-`npm run up`
+If you **do** have an existing db and want to upgrade its schema to the latest structure:
+`npm run db_migrate_latest`
+
+***OR***
+
+If you **don't** have an existing db and want to create basic sample database structure and entries:
+`npm run db_seed`
+
+Other npm tasks include db_migrate_rollback_all, db_migrate_down, db_migrate_up, and db_clear.
 
 To view this container's website from the docker host machine: `http://localhost:3004`
 
