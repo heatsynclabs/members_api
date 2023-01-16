@@ -44,7 +44,6 @@ const tableToDeleteKey = {
 };
 
 async function mapRelation(relationValue) {
-  console.warn('mapRelation:', relationValue);
   const [tableName, offset] = relationValue.split(':');
   return (await knex(tableName).offset(offset).first('id')).id;
 }
@@ -54,7 +53,6 @@ async function mapRelation(relationValue) {
 // collection of untransformed fixtures and replaces the `created_by` field
 // of each one with the corresponding user id from the database.
 function createMapRelations(relationNames) {
-  console.warn('Mapping relation:', relationNames);
   return async function mapRelations(collection) {
     return Promise.all(collection.map(async (item) => ({
       ...item,
