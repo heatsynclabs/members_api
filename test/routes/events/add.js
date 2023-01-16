@@ -18,19 +18,18 @@ const lab = exports.lab = require('lab').script();
 const url = require('url');
 
 const server = require('../../..');
-const { destroyRecords, getAuthToken, fixtures, makeUserIdAdmin } = require('../../fixture-client');
+const { getAuthToken, makeUserIdAdmin } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 const knex = require('../../../knex');
+const clearDb = require('../../clearDb');
 
 lab.experiment('POST /events', () => {
   let Authorization;
   let myUserId;
-  let memberships;
-  let events;
 
   lab.before(async () => {
-    let insertedUserIds = await knex('users').insert(users).returning(['id']);
-    myUserId = insertedUserIds[0]['id'];
+    const insertedUserIds = await knex('users').insert(users).returning(['id']);
+    myUserId = insertedUserIds[0].id;
 
     await makeUserIdAdmin(myUserId);
 
@@ -38,8 +37,8 @@ lab.experiment('POST /events', () => {
     Authorization = authRes.token;
   });
 
-  lab.after(() => {
-    return destroyRecords({ memberships }).then(destroyRecords({ events })).then(destroyRecords({ users }));
+  lab.after(async () => {
+    await clearDb();
   });
 
   lab.test('should create an event with appropriate created_by', async () => {
@@ -74,11 +73,11 @@ lab.experiment('POST /events', () => {
     const res2 = await server.inject(options2);
     expect(res2.statusCode).to.equal(200);
     expect(res2.result).to.be.an.array();
-    expect(res2.result[res2.result.length-1].name).to.equal('Laser Class Testy');
-    expect(res2.result[res2.result.length-1].created_by).to.equal(myUserId);
-    expect(res2.result[res2.result.length-1].created_at).to.not.equal(null);
-    expect(res2.result[res2.result.length-1].deleted_at).to.equal(null);
-    expect(res2.result[res2.result.length-1].is_deleted).to.equal(false);
+    expect(res2.result[res2.result.length - 1].name).to.equal('Laser Class Testy');
+    expect(res2.result[res2.result.length - 1].created_by).to.equal(myUserId);
+    expect(res2.result[res2.result.length - 1].created_at).to.not.equal(null);
+    expect(res2.result[res2.result.length - 1].deleted_at).to.equal(null);
+    expect(res2.result[res2.result.length - 1].is_deleted).to.equal(false);
   });
 
   lab.test('should error with missing name', async () => {

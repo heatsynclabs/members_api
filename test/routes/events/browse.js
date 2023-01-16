@@ -18,8 +18,9 @@ const lab = exports.lab = require('lab').script();
 const url = require('url');
 
 const server = require('../../..');
-const { createMapRelations, destroyRecords, getAuthToken } = require('../../fixture-client');
+const { getAuthToken } = require('../../fixture-client');
 const knex = require('../../../knex');
+const clearDb = require('../../clearDb');
 
 const { users, events } = require('../../fixtures');
 
@@ -34,7 +35,7 @@ lab.experiment('GET /events/', () => {
   });
 
   lab.after(async () => {
-    await destroyRecords({ users, events });
+    await clearDb();
   });
 
   lab.test('should retrieve event information when logged in', (done) => {

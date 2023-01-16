@@ -21,16 +21,15 @@ const { omit } = require('lodash');
 
 const bread = require('../../../lib/bread');
 const server = require('../../..');
-const { destroyRecords, destroyTokens } = require('../../fixture-client');
 const { users } = require('../../fixtures');
+const clearDb = require('../../clearDb');
 
 lab.experiment('POST /user', () => {
   // eslint-disable-next-line
   let tokens = [];
 
-  lab.after(() => {
-    return destroyRecords({ users })
-      .then(destroyTokens(tokens));
+  lab.after(async () => {
+    await clearDb();
   });
 
   lab.test('should create a user', async () => {

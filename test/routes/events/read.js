@@ -18,10 +18,10 @@ const lab = exports.lab = require('lab').script();
 const url = require('url');
 
 const server = require('../../..');
-const { createMapRelations, destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { getAuthToken } = require('../../fixture-client');
 const knex = require('../../../knex');
-
 const { users, events } = require('../../fixtures');
+const clearDb = require('../../clearDb');
 
 lab.experiment('GET /events/{event_id}', () => {
   let Authorization;
@@ -34,7 +34,7 @@ lab.experiment('GET /events/{event_id}', () => {
   });
 
   lab.after(async () => {
-    await destroyRecords({ users, events });
+    await clearDb();
   });
 
   lab.test('should return a event by id', async () => {
@@ -56,7 +56,7 @@ lab.experiment('GET /events/{event_id}', () => {
   lab.test.skip('should error if event is not found', async () => {
     const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format(`/events/badbadf7-53a7-4d66-abf5-541d3ed767d0`),
+      url: url.format('/events/badbadf7-53a7-4d66-abf5-541d3ed767d0'),
       method: 'GET',
       headers: { Authorization },
     };
@@ -68,7 +68,7 @@ lab.experiment('GET /events/{event_id}', () => {
   lab.test('should error with bad event id', async () => {
     const event = await knex('events').offset(0).first('id');
     const options = {
-      url: url.format(`/events/badbadbad`),
+      url: url.format('/events/badbadbad'),
       method: 'GET',
       headers: { Authorization },
     };

@@ -19,19 +19,19 @@ const url = require('url');
 
 const server = require('../../..');
 const knex = require('../../../knex');
+const clearDb = require('../../clearDb');
 
-const { createMapRelations, destroyRecords, getAuthToken, fixtures, makeUserIdAdmin } = require('../../fixture-client');
-const { events, users } = require('../../fixtures');
+const { getAuthToken, makeUserIdAdmin } = require('../../fixture-client');
+const { users, events } = require('../../fixtures');
 
 lab.experiment('DELETE /events/', () => {
   let Authorization;
   let myUserId;
-  let memberships;
-  let events;
 
   lab.before(async () => {
-    let insertedUserIds = await knex('users').insert(users).returning(['id']);
-    myUserId = insertedUserIds[0]['id'];
+    const insertedUserIds = await knex('users').insert(users).returning(['id']);
+    await knex('events').insert(events);
+    myUserId = insertedUserIds[0].id;
 
     await makeUserIdAdmin(myUserId);
 
@@ -39,8 +39,8 @@ lab.experiment('DELETE /events/', () => {
     Authorization = authRes.token;
   });
 
-  lab.after(() => {
-    return destroyRecords({ memberships }).then(destroyRecords({ events })).then(destroyRecords({ users }));
+  lab.after(async () => {
+    await clearDb();
   });
 
   lab.test('should successfully delete an event', async () => {

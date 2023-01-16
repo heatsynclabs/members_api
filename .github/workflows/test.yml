@@ -26,7 +26,7 @@ jobs:
       uses: bahmutov/npm-install@v1
     -
       name: Run tests
-      run: NODE_ENV=test docker compose run members_api
+      run: NODE_ENV=test docker compose run --rm members_api
 
     -
       name: Cleanup

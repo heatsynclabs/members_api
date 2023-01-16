@@ -18,9 +18,10 @@ const lab = exports.lab = require('lab').script();
 const url = require('url');
 
 const server = require('../../..');
-const { destroyRecords, getAuthToken, fixtures } = require('../../fixture-client');
+const { getAuthToken } = require('../../fixture-client');
 const { users } = require('../../fixtures');
 const knex = require('../../../knex');
+const clearDb = require('../../clearDb');
 
 lab.experiment('GET /users/{user_id}', () => {
   let Authorization;
@@ -31,8 +32,8 @@ lab.experiment('GET /users/{user_id}', () => {
     Authorization = authRes.token;
   });
 
-  lab.after(() => {
-    return destroyRecords({ users });
+  lab.after(async () => {
+    await clearDb();
   });
 
   lab.test('should return a user by id', async () => {

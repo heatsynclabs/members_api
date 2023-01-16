@@ -19,16 +19,17 @@ const url = require('url');
 const { omit } = require('lodash');
 
 const server = require('../../..');
-const { createMapRelations, destroyRecords, getAuthToken, fixtures, makeUserIdAdmin } = require('../../fixture-client');
+const { getAuthToken, makeUserIdAdmin } = require('../../fixture-client');
 const { users, events } = require('../../fixtures');
 const knex = require('../../../knex');
+const clearDb = require('../../clearDb');
 
 lab.experiment('PUT /events/', () => {
   let Authorization;
 
   lab.before(async () => {
-    let insertedUserIds = await knex('users').insert(users).returning(['id']);
-    myUserId = insertedUserIds[0]['id'];
+    const insertedUserIds = await knex('users').insert(users).returning(['id']);
+    const myUserId = insertedUserIds[0].id;
     await knex('events').insert(events);
 
     await makeUserIdAdmin(myUserId);
@@ -38,13 +39,12 @@ lab.experiment('PUT /events/', () => {
   });
 
   lab.after(async () => {
-    return destroyRecords({ memberships }).then(destroyRecords({ events })).then(destroyRecords({ users }));
+    await clearDb();
   });
 
   lab.test('should successfully edit an event', async () => {
     const eventsToEdit = await knex('events');
-    console.log(eventsToEdit);
-    eventsToEdit[0].name = "fookie";
+    eventsToEdit[0].name = 'fookie';
 
     const options = {
       url: url.format(`/events/${eventsToEdit[0].id}`),
@@ -54,7 +54,6 @@ lab.experiment('PUT /events/', () => {
     };
 
     const res = await server.inject(options);
-    console.log(res);
     expect(res.statusCode).to.equal(200);
     expect(res.result.id).to.equal(eventsToEdit[0].id);
     expect(res.result.name).to.equal('fookie');

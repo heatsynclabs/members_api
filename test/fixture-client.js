@@ -17,10 +17,10 @@ const { forEach, keys, values } = require('lodash');
 const promise = require('bluebird');
 const debug = require('debug')('errors');
 const url = require('url');
+const { Factory } = require('rosie');
 const server = require('..');
 const { connection } = require('../knexfile');
 const knex = require('../knex');
-const { Factory } = require('rosie');
 
 const fixturesConfig = {
   client: 'pg',
@@ -44,7 +44,7 @@ const tableToDeleteKey = {
 };
 
 async function mapRelation(relationValue) {
-  console.warn("mapRelation:",relationValue);
+  console.warn('mapRelation:', relationValue);
   const [tableName, offset] = relationValue.split(':');
   return (await knex(tableName).offset(offset).first('id')).id;
 }
@@ -54,7 +54,7 @@ async function mapRelation(relationValue) {
 // collection of untransformed fixtures and replaces the `created_by` field
 // of each one with the corresponding user id from the database.
 function createMapRelations(relationNames) {
-  console.warn("Mapping relation:",relationNames);
+  console.warn('Mapping relation:', relationNames);
   return async function mapRelations(collection) {
     return Promise.all(collection.map(async (item) => ({
       ...item,
@@ -89,8 +89,6 @@ module.exports = {
       const ids = values(table)[0];
       const key = tableToDeleteKey[tableName];
 
-      console.log("deleting", tableName);
-
       return knex(tableName)
         .whereIn(key, ids)
         .del()
@@ -102,11 +100,17 @@ module.exports = {
     });
   },
   async makeUserIdAdmin(userId) {
+    await knex('groups')
+      .insert({ id: 'ADMIN', description: 'Admin users' })
+      .onConflict('id')
+      .merge();
+
     const membership = new Factory();
     membership
       .attr('user_id')
       .attr('group_id');
-    memberships = [
+
+    const memberships = [
       // user 1 will be an admin
       membership.build({
         user_id: userId,
