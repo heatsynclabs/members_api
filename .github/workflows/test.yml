@@ -20,13 +20,13 @@ jobs:
         node-version: '16'
     -
       name: Build docker images
-      run: docker-compose build
+      run: docker compose build
     -
       name: Install dependencies
       uses: bahmutov/npm-install@v1
     -
       name: Run tests
-      run: docker-compose run -e NODE_ENV=test members_api
+      run: NODE_ENV=test docker compose run --rm members_api
 
     -
       name: Cleanup

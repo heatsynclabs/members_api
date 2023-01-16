@@ -24,4 +24,4 @@ COPY docker-run.sh /home/app/
 
 RUN npm ci
 
-CMD /home/app/docker-run.sh
+CMD "/home/app/docker-run.sh"

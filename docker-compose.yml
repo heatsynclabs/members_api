@@ -28,9 +28,9 @@ services:
       - "9229:9229"
     environment:
       NODE_PORT: 3004
-      NODE_ENV: "development"
+      NODE_ENV: "${NODE_ENV:-development}"
       NPMINSTALL: 1
-      DATABASE_URL: "postgres://postgres:postgres@members_api_postgres:5432/hsl_dev"
+      DATABASE_URL: "postgres://members_api_db_${NODE_ENV:-development}:members_api_db_${NODE_ENV:-development}@members_api_postgres:5432/members_api_db_${NODE_ENV:-development}"
       SMTP_HOST: "inbucket"
       SMTP_PORT: "10025"
       SMTP_USER: "user"
@@ -45,14 +45,15 @@ services:
 
   members_api_postgres:
     container_name: members_api_postgres
-    image: postgres:11.2-alpine
+    image: postgres:15.1-alpine
     ports:
       - "5432:5432"
     environment:
+      POSTGRES_MULTIPLE_DATABASES: members_api_db_development,members_api_db_test
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: hsl_dev
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./pg-init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s

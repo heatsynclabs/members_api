@@ -12,6 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const config = require('./config');
+const knexFile = require('./knexfile');
 
-module.exports = require('knex')(config.knex);
+module.exports = require('knex')(knexFile);
