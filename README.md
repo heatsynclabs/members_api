@@ -31,7 +31,7 @@ If you need to override some of the default environment variables or ports in fr
 
   > **Warning, this docker image is intended for dev mode** attached to a destroyable Postgres server and npm-install-able project folder. ***Running this in critical/prod environments is strongly discouraged without lots of testing!!!***
 
-Take note of port numbers, DATABASE_URL, SENDGRID_API_KEY, and volume paths.
+Take note of port numbers, DATABASE_URL, SENDGRID_API_KEY, and volume paths. For production environments, REDIS_URL is used for cache but for dev/test we use in-memory cache.
 
 You can add the following parameters to a new docker-compose.override.yml file if desired:
   - `NPMINSTALL: 1`

@@ -36,7 +36,15 @@
     },
     "DEV_SAME_SITE": {
       "description": "1 or 0, to set cookie same-site protection lax or none"
-    }
+    },
+    "DATABASE_URL": {
+      "description": "Postgres DB to connect to",
+      "value": "postgres://members_api_db_development:your_password@members_api_postgres:5432/members_api_db_development"
+    },
+    "REDIS_URL": {
+      "description": "Redis DB to connect to",
+      "value": "redis://localhost:6379"
+    },
   },
   "addons": [
     {
