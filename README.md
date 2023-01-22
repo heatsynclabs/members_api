@@ -76,13 +76,10 @@ You can build this container directly with: `docker build -t members_api .`
 You can run this container directly with: `docker run -it members_api /bin/sh`
 You'll then have to manually run commands like `npm install` or `npm run start` (see Dockerfile and docker-compose.yml for various assumptions and env vars we use during normal runtime.)
 
-<<<<<<< HEAD
 ### Emails/SMTP
 
 [Inbucket](https://inbucket.org) is running on http://localhost:10001 by default in dev mode so that you can receive emails without actually sending anything.
 
-=======
->>>>>>> chore-split-db
 ## Database
 
 Under Docker, a single container runs two databases; `members_api_db_development` and `members_api_db_test`.
@@ -115,7 +112,18 @@ Via Docker:
 
 Assuming your docker and/or node are on port 3004, you can run:
 
-Authenticate:
+Authenticate with email:
+
+`curl 'localhost:3004/users/email_login' -X POST -H 'Content-Type: application/json' --data-raw '{"email":"admin@example.com"}'`
+
+> Check Inbucket or your email account for the login link (token)
+
+`curl 'localhost:3004/users/oauth_token' -X POST -H 'Content-Type: application/json' --data-raw '{"token":"57bsnip6-6snip4-4snip7-bsnipd-47snipsnip1fd"}'`
+
+> Expected response: {"id":"6d1b52cf-snip-snip-snip-9ed80f8f7050","name":"Admin","scope":["ADMIN","USER"],"email":"admin@example.com","is_validated":true,"is_deleted":false,"version":10,"token":"eyJhbGsnipsnipsnipJ9.eyJpZCsnipsnipsnipsnipsnipsnipcyODh9.sTRsnipqY-ojmsnipsnipsnipsnipWo"}
+> Use your token as the auth token from then on.
+
+Authenticate with password:
 
   `curl -X POST -d 'email=admin@example.com&password=Testing1!' localhost:3004/auth`
   `export MY_AUTH_TOKEN=PASTE_YOUR_AUTH_TOKEN_HERE`
