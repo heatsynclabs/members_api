@@ -142,6 +142,9 @@ Create an event:
 Delete an event:
   `curl -X DELETE -H "Authorization: Bearer $MY_AUTH_TOKEN" localhost:3004/events/YOUR_EVENT_ID_HERE`
 
+## API Documentation
+API Swagger documentation can be accessed from the docker host machine: `http://localhost:3004/documentation`
+
 ## Heroku Deploy
 
 - See `app.json`
