@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const { map, omit } = require('lodash');
-const boom = require('boom');
+const boom = require('@hapi/boom');
 const Joi = require('joi');
 const { getCreds, isAdmin } = require('../lib/util');
 const model = require('../models/all_users');
