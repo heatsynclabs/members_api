@@ -5,6 +5,8 @@
 const bcrypt = require('bcryptjs');
 const config = require('../../config');
 
+console.log
+
 const seedUserPassword = 'Testing1!!';
 const hashedSeedUserPassword = bcrypt.hashSync(seedUserPassword, 10);
 
@@ -80,6 +82,26 @@ exports.seed = async (knex) => {
           start_date: '2019-10-11 13:00:00',
           end_date: '2019-10-11 15:00:00',
           frequency: 'weekly',
+          location: 'HeatSync Labs',
+          created_by: adminUserId,
+        },
+      ]);
+  }
+
+  const admin3DPrintingClass = await knex('events')
+    .where({ created_by: adminUserId, name: '3D Printing Class' })
+    .select(['id'])
+    .first();
+
+  if (!admin3DPrintingClass) {
+    await knex('events')
+      .insert([
+        {
+          name: '3D Printing Class',
+          description: 'Join this class!\r\nLiterally the most fun you will ever have.<br/>I <i>promise</i>.',
+          start_date: '2019-10-11 13:00:00',
+          end_date: '2019-10-11 15:00:00',
+          frequency: 'biweekly',
           location: 'HeatSync Labs',
           created_by: adminUserId,
         },
