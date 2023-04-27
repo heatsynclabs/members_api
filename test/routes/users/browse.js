@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const { expect } = require('code');
+const { expect } = require('@hapi/code');
 // eslint-disable-next-line
-const lab = exports.lab = require('lab').script();
+const lab = exports.lab = require('@hapi/lab').script();
 const url = require('url');
 
 const server = require('../../..');
