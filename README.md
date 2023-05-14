@@ -80,6 +80,10 @@ You'll then have to manually run commands like `npm install` or `npm run start` 
 
 [Inbucket](https://inbucket.org) is running on http://localhost:10001 by default in dev mode so that you can receive emails without actually sending anything.
 
+### Development
+
+As you make file changes, you may need to restart Docker to get the webserver to detect those changes.
+
 ## Database
 
 Under Docker, a single container runs two databases; `members_api_db_development` and `members_api_db_test`.

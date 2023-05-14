@@ -273,7 +273,7 @@ SELECT
   ) AS user_certs,
   COALESCE(
     (
-      SELECT json_agg(cards.id)
+      SELECT json_agg((cards.id, cards.card_number, cards.note, cards.permissions))
       FROM cards
       WHERE cards.user_id = u.id
     ), '[]'::json
@@ -393,5 +393,5 @@ INSERT INTO certifications (id, name, description, created_at, updated_at) VALUE
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(9, 'Table Saw', 'table saw', '2014-02-07 21:30:18.813289', '2014-02-23 06:08:39.593008');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(10, 'Plasma Cutter', 'Hobart 500534R 250ci Reconditioned A-Stock AirForce', '2014-04-11 02:08:58.334201', '2014-04-11 02:08:58.334201');
 INSERT INTO certifications (id, name, description, created_at, updated_at) VALUES(12, 'Laser Cutter (small)', 'Managed by Milton', '2013-01-25 16:19:24.331172', '2014-02-23 06:08:12.476114');
-ALTER SEQUENCE certifications_id_seq RESTART WITH 12;
+ALTER SEQUENCE certifications_id_seq RESTART WITH 13;
 

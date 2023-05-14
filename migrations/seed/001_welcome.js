@@ -107,4 +107,45 @@ exports.seed = async (knex) => {
         },
       ]);
   }
+  await knex('certifications')
+    .insert([
+      {
+        name: "Resin 3D Printerrrrrr",
+        description: "Person is authorized to use the Resin 3D printer.",
+      }
+    ]);
+
+  // Find the cert ID we just created
+  const { id: resinCertId } = await knex('certifications')
+    .where('name', "Resin 3D Printerrrrrr")
+    .first('id');
+  // Assign the admin to handle resin 3D printing certs
+  await knex('instructors')
+    .insert([
+      {
+        user_id: adminUserId,
+        cert_id: resinCertId,
+      },
+    ]);
+
+  // Go ahead and say that the admin is certified for their own class
+  await knex('user_certifications')
+    .insert([
+      {
+        user_id: adminUserId,
+        cert_id: resinCertId,
+        note: "Of course the teacher knows what they're teaching",
+        created_by: adminUserId,
+      },
+    ]);
+
+  await knex('cards')
+    .insert([
+      {
+        user_id: adminUserId,
+        card_number: "001122334455",
+        note: "Created via fixture",
+        permissions: 255,
+      },
+    ]);
 };
