@@ -16,6 +16,7 @@ const Hapi = require('@hapi/hapi');
 const Inert = require('@hapi/inert');
 const Vision = require('@hapi/vision');
 const JWTAuth = require('hapi-auth-jwt2');
+const HapiOpenapi3 = require('hapi-openapi3');
 const HapiSwagger = require('hapi-swagger');
 const CookieAuth = require('@hapi/cookie');
 const debug = require('debug')('errors');
@@ -42,9 +43,15 @@ async function start() {
       Inert,
       Vision,
       {
+        plugin: HapiOpenapi3,
+        options: {
+          ...config.openapiOptions,
+          includeFn: () => true,
+        }
+      },
+      {
         plugin: HapiSwagger,
-        // eslint-disable-next-line
-        options: config.swaggerOptions
+        options: config.swaggerOptions,
       },
     ]);
   } catch (error) {

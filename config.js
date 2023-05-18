@@ -125,6 +125,14 @@ module.exports = {
   admin_email: process.env.ADMIN_EMAIL || 'info@heatsynclabs.org',
   domain: process.env.DOMAIN_LOCATION || 'http://localhost:3005',
   domain_dev: process.env.DOMAIN_LOCATION_DEV || 'http://localhost:3005',
+  openapiOptions: {
+    info: {
+      title: Pack.name,
+      description: Pack.description + ' - ' + env,
+      version: Pack.version,
+    },
+    pathPrefixSize: 3,
+  },
   server_url: process.env.SERVER_URL || `http://localhost:${port}`,
   swaggerOptions: {
     info: {
