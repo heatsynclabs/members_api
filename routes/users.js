@@ -214,8 +214,7 @@ module.exports = [
           token: Joi.string().uuid().required(),
         }),
         payload: Joi.object({
-          password: Joi.string().regex(/^[a-zA-Z0-9]{6,1000}$/).required(),
-          verify_password: Joi.any().valid(Joi.ref('password')).required()
+          password: Joi.string().regex(/^[a-zA-Z0-9]{6,1000}$/).required()
         })
       },
     },

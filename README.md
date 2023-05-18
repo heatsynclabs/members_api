@@ -148,6 +148,9 @@ Delete an event:
 
 ## API Documentation
 API Swagger documentation can be accessed from the docker host machine: `http://localhost:3004/documentation`
+Schema documents are available in OpenAPI v2 and v3 flavors.
+* OpenAPI v2 Schema (Swagger) `http://localhost:3004/swagger.json`
+* OpenAPI v3 Schema `http://localhost:3004/openapi.json`
 
 ## Heroku Deploy
 
